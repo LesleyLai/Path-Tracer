@@ -5,7 +5,9 @@
 int main()
 try {
     Image image;
-    image.saveto("test.ppm");
+    std::string filename {"test.ppm"};
+    image.saveto(filename);
+    std::cout << "Save image to " << filename << '\n';
     return 0;
 } catch (const Cannot_write_file& e) {
     std::cerr << "Cannot write to file: " << e.what() << '\n';
