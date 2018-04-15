@@ -6,7 +6,6 @@
 Image::Image() : width_(200), height_(100) {}
 
 using index_t = std::ptrdiff_t;
-
 constexpr int floatColorTo255(double color) {
     return static_cast<int>(255.99 * color);
 }

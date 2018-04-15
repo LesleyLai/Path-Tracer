@@ -2,6 +2,7 @@ add_executable (PathTracingTest "")
 
 target_sources(PathTracingTest
     PRIVATE
+    color_test.cpp
     image_test.cpp
     vector_test.cpp
     ray_test.cpp

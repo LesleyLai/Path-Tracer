@@ -1,6 +1,7 @@
 add_library(common
     include/image.hpp
     src/image.cpp
+    include/color.hpp
     include/vector.hpp
     include/ray.hpp
     )
