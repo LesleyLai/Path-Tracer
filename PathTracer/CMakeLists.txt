@@ -4,6 +4,8 @@ add_library(common
     include/color.hpp
     include/vector.hpp
     include/ray.hpp
+    include/sphere.hpp
+    src/sphere.cpp
     )
 
 

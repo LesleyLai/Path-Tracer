@@ -6,6 +6,7 @@ target_sources(PathTracingTest
     image_test.cpp
     vector_test.cpp
     ray_test.cpp
+    sphere_test.cpp
     main.cpp
     )
 

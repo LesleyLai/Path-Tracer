@@ -1,17 +1,41 @@
 #include <iostream>
 
+#include "color.hpp"
+#include "ray.hpp"
 #include "image.hpp"
+#include "sphere.hpp"
+
+Color colorof(const Ray& ray) {
+    Sphere sphere{Vec3d(0,0,-1), 0.5};
+    if (auto t = sphere.intersect_at(ray)) {
+        return Color{1, 0, 0};
+    }
+
+    const auto unit_direction = ray.direction / ray.direction.length();
+    const float t = static_cast<float>(0.5 * (unit_direction.y + 1));
+    return (1.f - t) * Color{1,1,1} + t * Color(0.5f, 0.7f, 1);
+}
+
 
 int main()
 try {
     Image image(200, 100);
+
+    // Camera
+    const Vec3d origin(0.0, 0.0, 0.0);
+    const Vec3d lower_left_corner(-2.0, -1.0, -1.0);
+    const Vec3d horizontal(4.0, 0.0, 0.0);
+    const Vec3d vertical(0.0, 2.0, 0.0);
+
+
     const auto width = image.width(), height = image.height();
     for (index_t j = 0; j < height; ++j) {
         for (index_t i = 0; i < width; ++i) {
-            auto r = static_cast<float>(i) / width;
-            auto g = static_cast<float>(j) / height;
-            auto b = 0.2f;
-            image.color_at(i, j) = Color{r,g,b};
+            const double u = static_cast<double>(i) / width;
+            const double v = static_cast<double>(j) / height;
+
+            const Ray r {origin, lower_left_corner + u * horizontal + v * vertical};
+            image.color_at(i, j) = colorof(r);
         }
     }
 

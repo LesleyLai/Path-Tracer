@@ -2,31 +2,22 @@
 
 #include "ray.hpp"
 
-TEST_CASE("Ray", "[math]") {
+TEST_CASE("Ray", "[geometry]") {
     const Vec3d origin = {1, 1, 1};
     const Vec3d direction = {0, 0, 1};
 
     const Vec3d direction2 = {2, 3, 5};
-    auto unit = direction2 / direction2.length();
-
 
     SECTION("Default construct a ray at origin") {
         Ray default_ray;
-        REQUIRE(default_ray.origin() == Vec3d{0,0,0});
+        REQUIRE(default_ray.origin == Vec3d{0,0,0});
     }
 
     SECTION("Construct a ray with input") {
         Ray ray {origin, direction};
 
-        REQUIRE(ray.origin() == origin);
-        REQUIRE(ray.direction() == direction);
-    }
-
-    SECTION("Construct a ray with none-unit-vector direction will result a unit direction") {
-        Ray ray {origin, direction2};
-        REQUIRE(ray.direction().x == Approx(unit.x));
-        REQUIRE(ray.direction().y == Approx(unit.y));
-        REQUIRE(ray.direction().z == Approx(unit.z));
+        REQUIRE(ray.origin == origin);
+        REQUIRE(ray.direction == direction);
     }
 
     SECTION("Gets correct point at parameter t from the ray function") {
@@ -37,15 +28,6 @@ TEST_CASE("Ray", "[math]") {
         REQUIRE(expect_dest.x == Approx(dest.x));
         REQUIRE(expect_dest.y == Approx(dest.y));
         REQUIRE(expect_dest.z == Approx(dest.z));
-    }
-
-    SECTION("Set direction with none-unit vector result a unit direction") {
-        Ray ray {origin, direction};
-        ray.setDirection(direction2);
-
-        REQUIRE(ray.direction().x == Approx(unit.x));
-        REQUIRE(ray.direction().y == Approx(unit.y));
-        REQUIRE(ray.direction().z == Approx(unit.z));
     }
 }
 
