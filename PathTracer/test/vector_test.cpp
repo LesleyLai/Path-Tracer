@@ -3,7 +3,7 @@
 
 #include "vector.hpp"
 
-TEST_CASE("[math] Vectors")
+TEST_CASE("Vectors", "[math]")
 {
     Vec3d v{1, 2, 3};
     Vec3d v2{3, 5, 7};

@@ -2,7 +2,7 @@
 
 #include "ray.hpp"
 
-TEST_CASE("[math] Ray") {
+TEST_CASE("Ray", "[math]") {
     const Vec3d origin = {1, 1, 1};
     const Vec3d direction = {0, 0, 1};
 

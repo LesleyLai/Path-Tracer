@@ -3,14 +3,14 @@
 
 #include "image.hpp"
 
-Image::Image() : width_(200), height_(100) {}
-
-using index_t = std::ptrdiff_t;
 constexpr int floatColorTo255(double color) {
     return static_cast<int>(255.99 * color);
 }
 
-void Image::saveto(const std::string& filename)
+Image::Image(size_t width, size_t height)
+    : width_(width), height_(height), data_(width*height) {}
+
+void Image::saveto(const std::string& filename) const
 {
     std::regex ppm {R"(.*\.ppm$)"};
     if (!std::regex_match(filename, ppm)) {
@@ -23,15 +23,13 @@ void Image::saveto(const std::string& filename)
     }
 
     file << "P3\n" << width_ << ' ' << height_ << "\n255\n";
-    for (index_t j = 0; j < height_; ++j) {
+    for (index_t j = height_ - 1; j >= 0; --j) {
         for (index_t i = 0; i < width_; ++i) {
-            auto r = static_cast<double>(i) / width_;
-            auto g = static_cast<double>(j) / height_;
-            auto b = 0.2;
+            const auto color = color_at(i, j);
 
-            int red = floatColorTo255(r);
-            int green = floatColorTo255(g);
-            int blue = floatColorTo255(b);
+            int red = floatColorTo255(color.r);
+            int green = floatColorTo255(color.g);
+            int blue = floatColorTo255(color.b);
 
             file << red << ' ' << green << ' ' << blue << '\n';
         }
