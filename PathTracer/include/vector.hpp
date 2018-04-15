@@ -19,14 +19,14 @@
     using size_type = size_t;           \
     using value_type = T;               \
                                         \
-    constexpr Vector() {}               \
+    constexpr Vector() noexcept = default;       \
                                         \
     /* Accessors */                     \
-    value_type& operator[](size_type i) {return elems[i];} \
-    constexpr const value_type& operator[](size_type i) const {return elems[i];} \
+    value_type& operator[](size_type i) noexcept {return elems[i];} \
+    constexpr const value_type& operator[](size_type i) const noexcept {return elems[i];} \
                                         \
-    constexpr value_type length_square() const {return dot(*this, *this);} \
-    constexpr value_type length() const {return std::sqrt(length_square());} \
+    constexpr value_type length_square() const noexcept {return dot(*this, *this);} \
+    constexpr value_type length() const noexcept {return std::sqrt(length_square());} \
 
 /**
  * @brief Template of fix-sized vectors
@@ -69,8 +69,8 @@ struct Vector<T, 3> {
 
     VECTOR_IMPL_MIXIN(3)
 
-    constexpr Vector(T xx, T yy, T zz) : x{xx}, y{yy}, z{zz} {}
-    constexpr Vector(Vector<T, 2> xy, T zz) : x{xy.x}, y{xy.y}, z{zz} {}
+    constexpr Vector(T xx, T yy, T zz) noexcept : x{xx}, y{yy}, z{zz} {}
+    constexpr Vector(Vector<T, 2> xy, T zz) noexcept : x{xy.x}, y{xy.y}, z{zz} {}
 };
 
 /**
@@ -88,8 +88,8 @@ struct Vector<T, 4> {
 
     VECTOR_IMPL_MIXIN(4)
 
-    constexpr Vector(T xx, T yy, T zz, T ww) : x{xx}, y{yy}, z{zz}, w{ww} {}
-    constexpr Vector(Vector<T, 3> xyz, T ww) : x{xyz.x}, y{xyz.y}, z{xyz.z}, w{ww} {}
+    constexpr Vector(T xx, T yy, T zz, T ww) noexcept : x{xx}, y{yy}, z{zz}, w{ww} {}
+    constexpr Vector(Vector<T, 3> xyz, T ww) noexcept : x{xyz.x}, y{xyz.y}, z{xyz.z}, w{ww} {}
 };
 
 #undef VECTOR_IMPL_MIXIN
@@ -98,7 +98,7 @@ namespace detail {
 template <size_t size, typename T, typename Binary_op>
 constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs,
                                                const Vector<T, size>& rhs,
-                                               Binary_op f) {
+                                               Binary_op f) noexcept {
     Vector<T, size> result;
     for (size_t i = 0; i != size; ++i) {
         result[i] = f(lhs[i], rhs[i]);
@@ -109,7 +109,7 @@ constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs,
 template <size_t size, typename T, typename Binary_op>
 constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs,
                                                const T& rhs,
-                                               Binary_op f) {
+                                               Binary_op f) noexcept {
     Vector<T, size> result;
     for (size_t i = 0; i != size; ++i) {
         result[i] = f(lhs[i], rhs);
@@ -123,7 +123,7 @@ constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs,
 /// @related Vector
 template<typename T, size_t size>
 constexpr Vector<T, size>& operator+=(Vector<T, size>& lhs,
-                                   const Vector<T, size>& rhs)
+                                   const Vector<T, size>& rhs) noexcept
 {
     for (size_t i = 0; i != size; ++i) {
         lhs[i] += rhs[i];
@@ -135,7 +135,7 @@ constexpr Vector<T, size>& operator+=(Vector<T, size>& lhs,
 /// @related Vector
 template<typename T, size_t size>
 constexpr Vector<T, size>& operator-=(Vector<T, size>& lhs,
-                                   const Vector<T, size>& rhs)
+                                   const Vector<T, size>& rhs) noexcept
 {
     for (size_t i = 0; i != size; ++i) {
         lhs[i] -= rhs[i];
@@ -146,7 +146,7 @@ constexpr Vector<T, size>& operator-=(Vector<T, size>& lhs,
 /// Multiplies a scalar rhs to this vector
 /// @related Vector
 template<typename T, size_t size>
-constexpr Vector<T, size>& operator*=(Vector<T, size>& lhs, T rhs) {
+constexpr Vector<T, size>& operator*=(Vector<T, size>& lhs, T rhs) noexcept {
     for (size_t i = 0; i != size; ++i) {
         lhs[i] *= rhs;
     }
@@ -156,7 +156,7 @@ constexpr Vector<T, size>& operator*=(Vector<T, size>& lhs, T rhs) {
 /// Divides a scalar rhs to this vector
 /// @related Vector
 template<typename T, size_t size>
-constexpr Vector<T, size>& operator/=(Vector<T, size>& lhs, T rhs) {
+constexpr Vector<T, size>& operator/=(Vector<T, size>& lhs, T rhs) noexcept {
     for (size_t i = 0; i != size; ++i) {
         lhs[i] /= rhs;
     }
@@ -166,7 +166,7 @@ constexpr Vector<T, size>& operator/=(Vector<T, size>& lhs, T rhs) {
 /// Return the negation of the vector
 /// @related Vector
 template<typename T, size_t size>
-constexpr Vector<T, size> operator-(const Vector<T, size>& vector) {
+constexpr Vector<T, size> operator-(const Vector<T, size>& vector) noexcept {
     Vector<T, size> result;
     for (size_t i = 0; i != size; ++i) {
         result[i] = -vector[i];
@@ -180,7 +180,7 @@ constexpr Vector<T, size> operator-(const Vector<T, size>& vector) {
  */
 template<typename T, size_t size>
 constexpr Vector<T, size> operator+(const Vector<T, size>& lhs,
-                                    const Vector<T, size>& rhs)
+                                    const Vector<T, size>& rhs) noexcept
 {
     return detail::binary_op(lhs, rhs, std::plus<T>());
 }
@@ -191,7 +191,7 @@ constexpr Vector<T, size> operator+(const Vector<T, size>& lhs,
  */
 template<typename T, size_t size>
 constexpr Vector<T, size> operator-(const Vector<T, size>& lhs,
-                                    const Vector<T, size>& rhs)
+                                    const Vector<T, size>& rhs) noexcept
 {
     return detail::binary_op(lhs, rhs, std::minus<T>());
 }
@@ -201,7 +201,7 @@ constexpr Vector<T, size> operator-(const Vector<T, size>& lhs,
  * @related Vector
  */
 template<typename T, size_t size>
-constexpr Vector<T, size> operator*(const Vector<T, size>& lhs, T rhs)
+constexpr Vector<T, size> operator*(const Vector<T, size>& lhs, T rhs) noexcept
 {
     return detail::binary_op(lhs, rhs, std::multiplies<T>());
 }
@@ -211,7 +211,7 @@ constexpr Vector<T, size> operator*(const Vector<T, size>& lhs, T rhs)
  * @related Vector
  */
 template<typename T, size_t size>
-constexpr Vector<T, size> operator*(T lhs, const Vector<T, size>& rhs)
+constexpr Vector<T, size> operator*(T lhs, const Vector<T, size>& rhs) noexcept
 {
     return rhs * lhs;
 }
@@ -221,7 +221,7 @@ constexpr Vector<T, size> operator*(T lhs, const Vector<T, size>& rhs)
  * @related Vector
  */
 template<typename T, size_t size>
-constexpr Vector<T, size> operator/(const Vector<T, size>& lhs, T rhs)
+constexpr Vector<T, size> operator/(const Vector<T, size>& lhs, T rhs) noexcept
 {
     return detail::binary_op(lhs, rhs, std::divides<T>());
 }
@@ -231,7 +231,7 @@ constexpr Vector<T, size> operator/(const Vector<T, size>& lhs, T rhs)
  * @related Vector
  */
 template<typename T, size_t size>
-constexpr T dot(const Vector<T, size>& lhs, const Vector<T, size>& rhs)
+constexpr T dot(const Vector<T, size>& lhs, const Vector<T, size>& rhs) noexcept
 {
     T result = 0;
     for (size_t i = 0; i != size; ++i) {
@@ -245,7 +245,7 @@ constexpr T dot(const Vector<T, size>& lhs, const Vector<T, size>& rhs)
  * @related Vec3
  */
 template<typename T>
-constexpr Vector<T, 3> cross(const Vector<T, 3>& lhs, const Vector<T, 3>& rhs)
+constexpr Vector<T, 3> cross(const Vector<T, 3>& lhs, const Vector<T, 3>& rhs) noexcept
 {
     return Vector<T, 3> {lhs.y * rhs.z - lhs.z * rhs.y,
                 lhs.z * rhs.x - lhs.x * rhs.z,
@@ -259,7 +259,7 @@ constexpr Vector<T, 3> cross(const Vector<T, 3>& lhs, const Vector<T, 3>& rhs)
  */
 template<typename T, size_t size>
 constexpr bool operator==(const Vector<T, size>& lhs,
-                          const Vector<T, size>& rhs) {
+                          const Vector<T, size>& rhs) noexcept {
     for (size_t i = 0; i != size; ++i) {
         if (lhs[i] != rhs[i]) return false;
     }
@@ -272,7 +272,7 @@ constexpr bool operator==(const Vector<T, size>& lhs,
  */
 template<typename T, size_t size>
 constexpr bool operator!=(const Vector<T, size>& lhs,
-                          const Vector<T, size>& rhs) {
+                          const Vector<T, size>& rhs) noexcept {
     return !(lhs == rhs);
 }
 
@@ -281,7 +281,7 @@ constexpr bool operator!=(const Vector<T, size>& lhs,
  * @related Vector
  */
 template<typename T, size_t size>
-std::ostream& operator<<(std::ostream& os, const Vector<T, size>& v)
+std::ostream& operator<<(std::ostream& os, const Vector<T, size>& v) noexcept
 {
     os << "vec(";
     for (size_t i = 0, last = size - 1; i != size; ++i) {

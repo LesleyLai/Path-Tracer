@@ -18,9 +18,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_compiler_flags(/W4)
-    add_compiler_flags(/W14640)
-    add_compiler_flags(/std:c++latest)
+
     add_definitions(-D_CRT_SECURE_NO_WARNINGS) # Suppress C4996
 
     if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19.10)

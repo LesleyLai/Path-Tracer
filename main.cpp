@@ -16,6 +16,9 @@ try {
     std::cerr << "Unsupported image extension: " << e.what() << '\n';
     std::cerr << "Currently: only ppm output is supported\n";
     return -2;
+}  catch (const std::exception& e) {
+    std::cerr << "Error: " << e.what();
+    return -254;
 }  catch (...) {
     std::cerr << "Unknown exception";
     return -255;
