@@ -1,3 +1,5 @@
+include(CTest)
+
 add_executable (PathTracingTest "")
 
 target_sources(PathTracingTest
@@ -12,6 +14,6 @@ target_sources(PathTracingTest
 
 target_link_libraries(PathTracingTest common catch2)
 
-add_test(NAME PathTracingTest COMMAND PathTracerTest)
+add_test(NAME PathTracingTest COMMAND PathTracingTest)
 
 enable_testing()

@@ -6,8 +6,6 @@ TEST_CASE("Ray", "[geometry]") {
     const Vec3d origin = {1, 1, 1};
     const Vec3d direction = {0, 0, 1};
 
-    const Vec3d direction2 = {2, 3, 5};
-
     SECTION("Default construct a ray at origin") {
         Ray default_ray;
         REQUIRE(default_ray.origin == Vec3d{0,0,0});

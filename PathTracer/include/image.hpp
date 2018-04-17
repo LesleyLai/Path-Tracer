@@ -1,14 +1,14 @@
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
-using index_t = std::ptrdiff_t;
-
 #include <string>
 #include <sstream>
 #include <vector>
 #include <stdexcept>
 
 #include "color.hpp"
+
+using index_t = std::ptrdiff_t;
 
 struct Unsupported_image_extension : public std::invalid_argument {
     Unsupported_image_extension(const char* filename) : std::invalid_argument{filename} {}

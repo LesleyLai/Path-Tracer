@@ -19,7 +19,7 @@
     using size_type = size_t;           \
     using value_type = T;               \
                                         \
-    constexpr Vector() noexcept = default;       \
+    constexpr Vector() noexcept = default; \
                                         \
     /* Accessors */                     \
     value_type& operator[](size_type i) noexcept {return elems[i];} \
@@ -65,7 +65,6 @@ struct Vector<T, 3> {
         struct { Vector<T, 2> xy; };
         T elems[3];
     };
-
 
     VECTOR_IMPL_MIXIN(3)
 

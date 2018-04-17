@@ -12,7 +12,7 @@ Color colorof(const Ray& ray) {
     }
 
     const auto unit_direction = ray.direction / ray.direction.length();
-    const float t = static_cast<float>(0.5 * (unit_direction.y + 1));
+    const auto t = static_cast<float>(0.5 * (unit_direction.y + 1));
     return (1.f - t) * Color{1,1,1} + t * Color(0.5f, 0.7f, 1);
 }
 
