@@ -1,4 +1,5 @@
 #include "sphere.hpp"
+#include "ray.hpp"
 #include <catch.hpp>
 
 #include <iostream>
@@ -20,13 +21,13 @@ TEST_CASE("Ray-Sphere intersection", "[geometry]") {
         Sphere sphere{{0, 0, 2}, 1};
         const auto result = sphere.intersect_at(ray);
         REQUIRE(result);
-        REQUIRE(*result == Approx(1));
+        REQUIRE(result->t == Approx(1));
     }
 
     SECTION("intersect_at returns positive t if one of the intersection point happened behind the ray") {
         Sphere sphere{{0, 0, 0}, 2};
         const auto result = sphere.intersect_at(ray);
         REQUIRE(result);
-        REQUIRE(*result == Approx(2));
+        REQUIRE(result->t == Approx(2));
     }
 }

@@ -4,21 +4,22 @@
 #include <cassert>
 #include <optional>
 
+#include "hitable.hpp"
 #include "vector.hpp"
-#include "ray.hpp"
 
-struct Sphere
+struct Sphere : public Hitable
 {
     Vec3d center;
     double radius = 1;
 
+    Sphere(Vec3d center, double radius): Hitable{},
+        center{center}, radius{radius} {}
+
     /**
-     * @brief Ray-sphere intersection detection
-     * @param r The ray to check intersection
-     * @return std::nullopt if the ray do not intersect with the sphere,
-     * a number t if the ray intersects the sphere at point (a + bt)
+     * Ray-sphere intersection detection
+     * @see Hitable::intersect_at
      */
-    std::optional<double> intersect_at(const Ray& r) noexcept;
+    std::optional<Hit_record> intersect_at(const Ray& r) noexcept override;
 };
 
 #endif // SPHERE_HPP

@@ -2,10 +2,13 @@ add_library(common
     include/image.hpp
     src/image.cpp
     include/color.hpp
+    include/hitable.hpp
     include/vector.hpp
     include/ray.hpp
     include/sphere.hpp
     src/sphere.cpp
+    include/scene.hpp
+    src/scene.cpp
     )
 
 
