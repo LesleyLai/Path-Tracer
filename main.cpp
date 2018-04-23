@@ -13,8 +13,16 @@ Color colorof(const Scene& scene, const Ray& ray)
     std::unique_ptr<Hitable> sphere = std::make_unique<Sphere>(Vec3d(0,0,-1), 0.5);
 
     if (auto hit = scene.intersect_at(ray)) {
+        auto point = hit->point;
+        point -= Vec3d{0,0,-1};
+        point /= point.length();
+
+
         //const auto point = ray.point_at_parameter(*t);
-        return Color{1, 0, 0};
+        return Color{static_cast<float>(point.x + 1) / 2,
+                    static_cast<float>(point.y + 1) / 2,
+                    static_cast<float>(point.z + 1) / 2,
+        };
     }
 
     const auto unit_direction = ray.direction / ray.direction.length();

@@ -1,6 +1,7 @@
 #ifndef HITABLE_HPP
 #define HITABLE_HPP
 
+#include <optional>
 #include "vector.hpp"
 
 struct Ray;
