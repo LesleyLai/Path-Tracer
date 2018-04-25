@@ -33,7 +33,7 @@ public:
      * @return std::nullopt if the ray do not intersect with the sphere,
      * a Hit_record struct if the ray intersects the sphere
      */
-    virtual std::optional<Hit_record> intersect_at(const Ray& r) noexcept = 0;
+    virtual std::optional<Hit_record> intersect_at(const Ray& r, double t_min, double t_max) noexcept = 0;
 
 protected:
     Hitable() noexcept = default;

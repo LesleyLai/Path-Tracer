@@ -19,7 +19,7 @@ struct Sphere : public Hitable
      * Ray-sphere intersection detection
      * @see Hitable::intersect_at
      */
-    std::optional<Hit_record> intersect_at(const Ray& r) noexcept override;
+    std::optional<Hit_record> intersect_at(const Ray& r, double t_min, double t_max) noexcept override;
 };
 
 #endif // SPHERE_HPP

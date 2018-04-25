@@ -18,7 +18,7 @@ public:
     /**
      * @brief Returns the hit record at the closet hit point
      */
-    std::optional<Hit_record> intersect_at(const Ray& r) const noexcept;
+    std::optional<Hit_record> intersect_at(const Ray& r, double t_min, double t_max) const noexcept;
 
 private:
     std::vector<std::unique_ptr<Hitable>> objects_;
