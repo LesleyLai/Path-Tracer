@@ -27,9 +27,9 @@ void Image::saveto(const std::string& filename) const
         for (index_t i = 0; i < width_; ++i) {
             const auto color = color_at(i, j);
 
-            int red = floatColorTo255(color.r);
-            int green = floatColorTo255(color.g);
-            int blue = floatColorTo255(color.b);
+            int red = floatColorTo255(std::sqrt(color.r));
+            int green = floatColorTo255(std::sqrt(color.g));
+            int blue = floatColorTo255(std::sqrt(color.b));
 
             file << red << ' ' << green << ' ' << blue << '\n';
         }
