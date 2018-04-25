@@ -24,7 +24,7 @@ Vec3d random_in_unit_circle() {
 }
 
 
-constexpr size_t max_recursion = 5;
+constexpr size_t max_recursion = 100;
 Color colorof(const Scene& scene, const Ray& ray, size_t recursion_count = max_recursion)
 {
 	if (recursion_count == 0) {
@@ -34,7 +34,7 @@ Color colorof(const Scene& scene, const Ray& ray, size_t recursion_count = max_r
 	constexpr double inf = std::numeric_limits<double>::infinity();
 	constexpr double damping = 0.5;
 
-    if (auto hit = scene.intersect_at(ray, 0, inf)) {
+    if (auto hit = scene.intersect_at(ray, 0.0001, inf)) {
         Vec3d target = hit->point + hit->normal + random_in_unit_circle();
 
         return damping * colorof(scene, Ray{hit->point, target - hit->point}, recursion_count-1);
