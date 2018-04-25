@@ -8,11 +8,11 @@ TEST_CASE( "Colors", "[Color]" ) {
     Color red(1, 0, 0);
     Color blue(0, 0, 1);
 
-    SECTION( "Cannot construct color with overflow" ) {
+    SECTION( "Construct color do not check overflow" ) {
         const Color tmp(-1, 0, 2);
-        REQUIRE( tmp.r == Approx(0) );
+        REQUIRE( tmp.r == Approx(-1) );
         REQUIRE( tmp.g == Approx(0) );
-        REQUIRE( tmp.b == Approx(1) );
+        REQUIRE( tmp.b == Approx(2) );
     }
 
     SECTION( "Addition of RGB float colors" ) {
@@ -42,13 +42,23 @@ TEST_CASE( "Colors", "[Color]" ) {
         REQUIRE( tmp2.b == Approx(.33) );
     }
 
-    SECTION( "Color are clamped when value overflowed" ) {
+    SECTION("Scalar inplace division") {
+        white /= 2;
+
+        REQUIRE( white.r == Approx(.5) );
+        REQUIRE( white.g == Approx(.5) );
+        REQUIRE( white.b == Approx(.5) );
+    }
+
+    SECTION( "Clamp overflowed colors" ) {
         white += Color(.1f, .1f, .1f);
+        white.clamp();
         REQUIRE( white.r == Approx(1) );
         REQUIRE( white.g == Approx(1) );
         REQUIRE( white.b == Approx(1) );
 
         black -= Color(.5f, .5f, .5f);
+        black.clamp();
         REQUIRE( black.r == Approx(0) );
         REQUIRE( black.g == Approx(0) );
         REQUIRE( black.b == Approx(0) );

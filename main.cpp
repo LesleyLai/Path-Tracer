@@ -1,22 +1,22 @@
 #include <iostream>
+#include <random>
+#include <memory>
 
+#include "camera.hpp"
 #include "color.hpp"
 #include "ray.hpp"
 #include "image.hpp"
 #include "sphere.hpp"
 #include "scene.hpp"
 
-#include <memory>
+constexpr size_t samples_count = 200;
 
 Color colorof(const Scene& scene, const Ray& ray)
 {
-    std::unique_ptr<Hitable> sphere = std::make_unique<Sphere>(Vec3d(0,0,-1), 0.5);
-
     if (auto hit = scene.intersect_at(ray)) {
         auto point = hit->point;
         point -= Vec3d{0,0,-1};
         point /= point.length();
-
 
         //const auto point = ray.point_at_parameter(*t);
         return Color{static_cast<float>(point.x + 1) / 2,
@@ -36,23 +36,30 @@ try {
     Image image(200, 100);
 
     // Camera
-    const Vec3d origin(0.0, 0.0, 0.0);
-    const Vec3d lower_left_corner(-2.0, -1.0, -1.0);
-    const Vec3d horizontal(4.0, 0.0, 0.0);
-    const Vec3d vertical(0.0, 2.0, 0.0);
+    Camera camera;
 
     Scene scene;
     scene.add_object<Sphere>(Vec3d(0,0,-1), 0.5);
     scene.add_object<Sphere>(Vec3d(0,-100.5,-1), 100);
 
     const auto width = image.width(), height = image.height();
+
+    std::random_device rd;
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
     for (index_t j = 0; j < height; ++j) {
         for (index_t i = 0; i < width; ++i) {
-            const double u = static_cast<double>(i) / width;
-            const double v = static_cast<double>(j) / height;
+            Color c;
+            for (index_t sample = 0; sample < samples_count; ++sample) {
+                const double u = (i + dis(gen)) / width;
+                const double v = (j + dis(gen)) / height;
 
-            const Ray r {origin, lower_left_corner + u * horizontal + v * vertical};
-            image.color_at(i, j) = colorof(scene, r);
+                const auto r = camera.getRay(u, v);
+                c += colorof(scene, r);
+            }
+            c /= static_cast<float>(samples_count);
+            image.color_at(i, j) = c;
         }
     }
 

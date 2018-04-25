@@ -26,22 +26,19 @@ struct Color {
      * \param red, green, blue
      */
     constexpr Color(float red, float green, float blue) : r{red}, g{green}, b{blue} {
-        clampcolor();
     }
 
     constexpr Color& operator*=(float rhs) noexcept {
         r *= rhs;
         g *= rhs;
         b *= rhs;
-        clampcolor();
         return *this;
     }
 
     constexpr Color& operator/=(float rhs) noexcept {
-        r -= rhs;
-        g -= rhs;
-        b -= rhs;
-        clampcolor();
+        r /= rhs;
+        g /= rhs;
+        b /= rhs;
         return *this;
     }
 
@@ -49,7 +46,6 @@ struct Color {
         r += rhs.r;
         g += rhs.g;
         b += rhs.b;
-        clampcolor();
         return *this;
     }
 
@@ -57,7 +53,6 @@ struct Color {
         r -= rhs.r;
         g -= rhs.g;
         b -= rhs.b;
-        clampcolor();
         return *this;
     }
 
@@ -76,8 +71,7 @@ struct Color {
         return os;
     }
 
-private:
-    constexpr void clampcolor() noexcept {
+    constexpr void clamp() noexcept {
         r = std::clamp(r, 0.0f, 1.0f);
         g = std::clamp(g, 0.0f, 1.0f);
         b = std::clamp(b, 0.0f, 1.0f);
