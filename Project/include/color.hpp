@@ -19,13 +19,14 @@ struct Color {
     /**
      * \brief Constructs a new black 24 bit RGB Color.
      */
-    constexpr Color() = default;
+    constexpr Color() noexcept = default;
 
     /**
      * \brief Constructs a new 24 bit float RGB Color with given r,g,b components.
      * \param red, green, blue
      */
-    constexpr Color(float red, float green, float blue) : r{red}, g{green}, b{blue} {
+    constexpr Color(float red, float green, float blue) noexcept
+        : r{red}, g{green}, b{blue} {
     }
 
     constexpr Color& operator*=(float rhs) noexcept {
@@ -39,6 +40,13 @@ struct Color {
         r /= rhs;
         g /= rhs;
         b /= rhs;
+        return *this;
+    }
+
+    constexpr Color& operator*=(const Color &rhs) noexcept {
+        r *= rhs.r;
+        g *= rhs.g;
+        b *= rhs.b;
         return *this;
     }
 
@@ -88,6 +96,10 @@ constexpr Color operator+(const Color &lhs, const Color &rhs) noexcept {
 
 constexpr Color operator-(const Color &lhs, const Color &rhs) noexcept {
     return Color(lhs.r-rhs.r, lhs.g-rhs.g, lhs.b-rhs.b);
+}
+
+constexpr Color operator*(const Color &lhs, const Color &rhs) noexcept {
+    return Color(lhs.r*rhs.r, lhs.g*rhs.g, lhs.b*rhs.b);
 }
 
 constexpr Color operator*(const Color &c, float scalar) noexcept {

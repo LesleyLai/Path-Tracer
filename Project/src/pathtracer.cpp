@@ -16,18 +16,19 @@ constexpr size_t samples_count = 200;
 
 Color Path_tracer::trace(const Scene &scene, const Ray &ray, size_t depth) const noexcept
 {
+    constexpr double inf = std::numeric_limits<double>::infinity();
+    constexpr size_t max_depth = 50;
+
     // depth exceed some threshold
-    if (depth == 0) {
+    if (depth >= max_depth) {
         return Color{}; // return black
     }
-
-    constexpr double inf = std::numeric_limits<double>::infinity();
 
     if (auto hit = scene.intersect_at(ray, 0.0001, inf)) {
         auto material = hit->material;
         auto ref = material->scatter(ray, *hit);
         if (ref) {
-            return material->albedo() * trace(scene, *ref, depth-1);
+            return material->albedo() * trace(scene, *ref, depth+1);
         }
             return Color{};
     }
@@ -39,9 +40,8 @@ Color Path_tracer::trace(const Scene &scene, const Ray &ray, size_t depth) const
 
 Path_tracer::Path_tracer() = default;
 
-void Path_tracer::run(const Scene& scene)
+void Path_tracer::run(const Scene& scene, Image& image)
 {
-    Image image(200, 100);
 
     // Camera
     Camera camera;
@@ -65,10 +65,6 @@ void Path_tracer::run(const Scene& scene)
         }
         std::cout << (j / static_cast<double>(height) * 100) << "%\n" << std::flush;
     }
-
-    std::string filename {"test.ppm"};
-    image.saveto(filename);
-    std::cout << "Save image to " << filename << '\n';
 }
 
 

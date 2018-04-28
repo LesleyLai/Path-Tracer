@@ -11,11 +11,16 @@ class Material {
 public:
     enum class Type {
         Lambertian,
-        Reflect
+        Metal
     };
 
-    constexpr Material() noexcept = default;
-    constexpr Material(float albedo, Type type) noexcept : albedo_{albedo}, type_{type} {}
+    Material(Color albedo) noexcept : albedo_{albedo} {}
+
+    virtual ~Material() = default;
+    Material(const Material&) noexcept = default;
+    Material& operator=(const Material&) noexcept = default;
+    Material(Material&&) noexcept = default;
+    Material& operator=(Material&&) noexcept = default;
 
     /**
      * @brief scatter
@@ -24,17 +29,31 @@ public:
      * @return scattered ray if the incident ray is not absorbed
      */
     std::optional<Ray>
-    scatter(const Ray& ray_in, const Hit_record& record) const noexcept;
+    virtual scatter(const Ray& ray_in, const Hit_record& record) const = 0;
 
-    constexpr float albedo() const noexcept
+    constexpr Color albedo() const noexcept
     {
         return albedo_;
     }
 
-
 private:
-    float albedo_ = 0.5f;
-    Type type_ = Type::Lambertian;
+    Color albedo_ {0.5f, 0.5f, 0.5f};
+};
+
+class Lambertian : public Material {
+public:
+    Lambertian(Color albedo) noexcept : Material{albedo} {}
+
+    std::optional<Ray>
+    scatter(const Ray& ray_in, const Hit_record& record) const override;
+};
+
+class Metal : public Material {
+public:
+    Metal(Color albedo) noexcept : Material{albedo} {}
+
+    std::optional<Ray>
+    scatter(const Ray& ray_in, const Hit_record& record) const override;
 };
 
 #endif // MATERIAL_HPP

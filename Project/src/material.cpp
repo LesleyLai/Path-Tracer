@@ -7,8 +7,8 @@ constexpr Vec3d reflect(Vec3d v, Vec3d n) noexcept {
     return v - 2 * dot(v, n) * n;
 }
 
-template <typename Random_generator>
-Vec3d random_in_unit_circle(Random_generator& gen) noexcept {
+Vec3d random_in_unit_circle() {
+    static std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
     static std::uniform_real_distribution<> dis(-1, 1);
 
     // Standard mersenne_twister_engine seeded with rd()
@@ -19,29 +19,20 @@ Vec3d random_in_unit_circle(Random_generator& gen) noexcept {
     return p;
 }
 
-std::optional<Ray>
-Material::scatter(const Ray &ray_in, const Hit_record &record) const noexcept
+std::optional<Ray> Lambertian::scatter(const Ray& /*ray_in*/, const Hit_record& record) const
 {
-    static std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
+    Vec3d target = record.point + record.normal + random_in_unit_circle();
+    return Ray{record.point, target - record.point};
+}
 
-    switch (type_) {
-    case Type::Lambertian:
-    {
-        Vec3d target = record.point + record.normal + random_in_unit_circle(gen);
-        return Ray{record.point, target - record.point};
-    }
-    case Type::Reflect:
-    {
-        auto incident_dir = ray_in.direction / ray_in.direction.length();
-        auto reflected = reflect(incident_dir, record.normal);
-        if (dot(reflected, record.normal) <= 0) {
-            return std::nullopt;
-        }
-
-        Ray scattered {record.point, reflected};
-        return scattered;
-    }
+std::optional<Ray> Metal::scatter(const Ray& ray_in, const Hit_record& record) const
+{
+    auto incident_dir = ray_in.direction / ray_in.direction.length();
+    auto reflected = reflect(incident_dir, record.normal);
+    if (dot(reflected, record.normal) <= 0) {
+        return std::nullopt;
     }
 
-
+    Ray scattered {record.point, reflected};
+    return scattered;
 }
