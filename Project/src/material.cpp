@@ -4,6 +4,9 @@
 #include "vector.hpp"
 #include "material.hpp"
 
+// Standard mersenne_twister_engine
+static std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
+
 constexpr Vec3d reflect(Vec3d v, Vec3d n) noexcept {
     return v - 2 * dot(v, n) * n;
 }
@@ -20,10 +23,7 @@ constexpr std::optional<Vec3d> refract(Vec3d v, Vec3d n, double ni_over_nt) noex
 }
 
 Vec3d random_in_unit_circle() {
-    static std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
     static const std::uniform_real_distribution<> dis(-1, 1);
-
-    // Standard mersenne_twister_engine seeded with rd()
     Vec3d p;
     do {
         p = Vec3d(dis(gen), dis(gen), dis(gen));
@@ -49,23 +49,40 @@ std::optional<Ray> Metal::scatter(const Ray& ray_in, const Hit_record& record) c
     return scattered;
 }
 
+// Reflectivity by Christophe Schlick
+double schlick(double cosine, double ref_idx) {
+    double r0 = (1 - ref_idx) / (1 + ref_idx);
+    r0 *= r0;
+    return r0 + (1-r0) * std::pow(1-cosine, 5);
+}
+
 std::optional<Ray> Dielectric::scatter(const Ray &ray_in, const Hit_record &record) const
 {
     Vec3d out_normal;
     double ni_over_nt;
+    double cosine;
     if (dot(ray_in.direction, record.normal) > 0) {
         out_normal = -record.normal;
         ni_over_nt = refractive_index_;
+        cosine = refractive_index_ * dot(ray_in.direction, record.normal) / ray_in.direction.length();
     } else {
         out_normal = record.normal;
         ni_over_nt = 1 / refractive_index_;
+        cosine = -dot(ray_in.direction, record.normal) / ray_in.direction.length();
     }
 
-    if (auto refraction = refract(ray_in.direction, out_normal, ni_over_nt)) {
+    double reflection_prob = 1;
+
+    auto refraction = refract(ray_in.direction, out_normal, ni_over_nt);
+    if (refraction) {
+        reflection_prob = schlick(cosine, refractive_index_);
+    }
+
+    static const std::uniform_real_distribution<> dis(0, 1);
+    if (dis(gen) < reflection_prob) {
+        auto incident_dir = ray_in.direction / ray_in.direction.length();
+        auto reflection = reflect(incident_dir, record.normal);
+        return Ray(record.point, reflection);
+    }
         return Ray(record.point, *refraction);
-    }
-
-    auto incident_dir = ray_in.direction / ray_in.direction.length();
-    auto reflection = reflect(incident_dir, record.normal);
-    return Ray(record.point, reflection);
 }
