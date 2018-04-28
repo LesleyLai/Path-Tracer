@@ -2,9 +2,16 @@
 #include <fstream>
 #include <regex>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #include "image.hpp"
 
-constexpr int floatColorTo255(double color) {
+
+using byte = unsigned char;
+
+
+constexpr byte floatColorTo255(double color) {
     return static_cast<int>(255.99 * color);
 }
 
@@ -13,11 +20,31 @@ Image::Image(size_t width, size_t height)
 
 void Image::saveto(const std::string& filename) const
 {
-    std::regex ppm {R"(.*\.ppm$)"};
+	/*std::regex ppm {R"(.*\.ppm$)"};
     if (!std::regex_match(filename, ppm)) {
         throw Unsupported_image_extension{filename.c_str()};
-    }
+    }*/
 
+	std::regex png {R"(.*\.png$)"};
+	if (!std::regex_match(filename, png)) {
+	throw Unsupported_image_extension{filename.c_str()};
+	}
+	
+	
+	std::vector<byte> buffer;
+	buffer.reserve(data_.size() * 3);
+	for (auto i = data_.crbegin(), end = data_.crend(); i != end; ++i) {
+		byte red = floatColorTo255(std::sqrt(i->r));
+		byte green = floatColorTo255(std::sqrt(i->g));
+		byte blue = floatColorTo255(std::sqrt(i->b));
+		//auto color: data_
+		buffer.push_back(red);
+		buffer.push_back(green);
+		buffer.push_back(blue);
+	}
+	stbi_write_png(filename.c_str(), width_, height_, 3, reinterpret_cast<void*>(buffer.data()), width_ * 3);
+
+	/*
     std::ofstream file {filename};
     if (!file.is_open()) {
         throw Cannot_write_file{filename.c_str()};
@@ -35,6 +62,7 @@ void Image::saveto(const std::string& filename) const
             file << red << ' ' << green << ' ' << blue << '\n';
         }
     }
+	*/
 }
 
 

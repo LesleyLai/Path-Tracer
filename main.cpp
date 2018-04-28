@@ -43,7 +43,7 @@ try {
         std::cout << s / 60 << "min " << s % 60 << "s";
     }
 
-    std::string filename {"test.ppm"};
+    std::string filename {"test.png"};
     image.saveto(filename);
     std::cout << "Save image to " << filename << '\n';
 
