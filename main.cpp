@@ -17,7 +17,7 @@ try {
 
     std::vector<std::unique_ptr<Material>> materials;
     materials.push_back(std::make_unique<Lambertian>(Color(0.5f, 0.8f, 0.8f)));
-    materials.push_back(std::make_unique<Metal>(Color(0.8f, 0.8f, 0.8f)));
+    materials.push_back(std::make_unique<Metal>(Color(0.8f, 0.8f, 0.8f), 0.3));
     materials.push_back(std::make_unique<Lambertian>(Color(0.8f, 0.2f, 0.2f)));
 
     Scene scene;

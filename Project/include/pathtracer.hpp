@@ -14,7 +14,7 @@ class Path_tracer
 {
 
 public:
-    Path_tracer();
+    Path_tracer() = default;
 
     void run(const Scene& scene, Image& image);
 

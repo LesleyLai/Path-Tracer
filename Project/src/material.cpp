@@ -9,7 +9,7 @@ constexpr Vec3d reflect(Vec3d v, Vec3d n) noexcept {
 
 Vec3d random_in_unit_circle() {
     static std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
-    static std::uniform_real_distribution<> dis(-1, 1);
+    static const std::uniform_real_distribution<> dis(-1, 1);
 
     // Standard mersenne_twister_engine seeded with rd()
     Vec3d p;
@@ -28,7 +28,7 @@ std::optional<Ray> Lambertian::scatter(const Ray& /*ray_in*/, const Hit_record& 
 std::optional<Ray> Metal::scatter(const Ray& ray_in, const Hit_record& record) const
 {
     auto incident_dir = ray_in.direction / ray_in.direction.length();
-    auto reflected = reflect(incident_dir, record.normal);
+    auto reflected = reflect(incident_dir, record.normal) + fuzzness_ * random_in_unit_circle();
     if (dot(reflected, record.normal) <= 0) {
         return std::nullopt;
     }

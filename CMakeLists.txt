@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.6)
 
 project(PathTracing)
 
-set (CMAKE_CXX_STANDARD 17)
-set (CMAKE_CXX_STANDARD_REQUIRED ON)
-
 add_subdirectory(third-party)
 
 include("cmake/compiler.cmake")

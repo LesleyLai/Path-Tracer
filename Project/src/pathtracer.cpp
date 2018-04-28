@@ -38,8 +38,6 @@ Color Path_tracer::trace(const Scene &scene, const Ray &ray, size_t depth) const
     return (1.f - t) * Color{1,1,1} + t * Color(0.5f, 0.7f, 1);
 }
 
-Path_tracer::Path_tracer() = default;
-
 void Path_tracer::run(const Scene& scene, Image& image)
 {
 
@@ -50,8 +48,8 @@ void Path_tracer::run(const Scene& scene, Image& image)
 
     std::uniform_real_distribution<> dis(0.0, 1.0);
 
-    for (index_t j = 0; j < height; ++j) {
-        for (index_t i = 0; i < width; ++i) {
+    for (size_t j = 0; j < height; ++j) {
+        for (size_t i = 0; i < width; ++i) {
             Color c;
             for (index_t sample = 0; sample < samples_count; ++sample) {
                 const double u = (i + dis(gen)) / width;

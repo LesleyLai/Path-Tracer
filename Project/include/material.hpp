@@ -48,12 +48,16 @@ public:
     scatter(const Ray& ray_in, const Hit_record& record) const override;
 };
 
+
 class Metal : public Material {
 public:
-    Metal(Color albedo) noexcept : Material{albedo} {}
+    Metal(Color albedo, double fuzzness) noexcept : Material{albedo}, fuzzness_{fuzzness} {}
 
     std::optional<Ray>
     scatter(const Ray& ray_in, const Hit_record& record) const override;
+
+private:
+    double fuzzness_;
 };
 
 #endif // MATERIAL_HPP

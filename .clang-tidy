@@ -2,6 +2,7 @@
 Checks:          '*,
 -clang-analyzer-alpha.*,
 -clang-analyzer-*,
+-clang-diagnostic-*,
 -abseil-string-find-startswith,
 -readability-braces-around-statements,
 -readability-implicit-bool-cast,
