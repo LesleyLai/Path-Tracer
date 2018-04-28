@@ -14,7 +14,7 @@ public:
         Metal
     };
 
-    Material(Color albedo) noexcept : albedo_{albedo} {}
+    explicit Material(Color albedo) noexcept : albedo_{albedo} {}
 
     virtual ~Material() = default;
     Material(const Material&) noexcept = default;
@@ -42,7 +42,7 @@ private:
 
 class Lambertian : public Material {
 public:
-    Lambertian(Color albedo) noexcept : Material{albedo} {}
+    explicit Lambertian(Color albedo) noexcept : Material{albedo} {}
 
     std::optional<Ray>
     scatter(const Ray& ray_in, const Hit_record& record) const override;

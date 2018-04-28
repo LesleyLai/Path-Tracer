@@ -40,10 +40,6 @@ Color Path_tracer::trace(const Scene &scene, const Ray &ray, size_t depth) const
 
 void Path_tracer::run(const Scene& scene, Image& image)
 {
-
-    // Camera
-    Camera camera;
-
     const auto width = image.width(), height = image.height();
 
     std::uniform_real_distribution<> dis(0.0, 1.0);
@@ -55,7 +51,7 @@ void Path_tracer::run(const Scene& scene, Image& image)
                 const double u = (i + dis(gen)) / width;
                 const double v = (j + dis(gen)) / height;
 
-                const auto r = camera.getRay(u, v);
+                const auto r = scene.camera().getRay(u, v);
                 c += trace(scene, r);
             }
             c /= static_cast<float>(samples_count);

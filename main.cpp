@@ -15,16 +15,16 @@ try {
 
     Path_tracer path_tracer;
 
-    std::vector<std::unique_ptr<Material>> materials;
-    materials.push_back(std::make_unique<Lambertian>(Color(0.5f, 0.8f, 0.8f)));
-    materials.push_back(std::make_unique<Metal>(Color(0.8f, 0.8f, 0.8f), 0.3));
-    materials.push_back(std::make_unique<Lambertian>(Color(0.8f, 0.2f, 0.2f)));
+    auto blue = std::make_unique<Lambertian>(Color(0.5f, 0.8f, 0.8f));
+    auto pink = std::make_unique<Lambertian>(Color(0.8f, 0.2f, 0.2f));
+    auto bronze = std::make_unique<Metal>(Color(0.8f, 0.5f, 0.2f) / 2.0f, 0.2);
+    auto mirror = std::make_unique<Metal>(Color(0.9f, 0.9f, 0.9f), 0.1);
 
-    Scene scene;
-    scene.add_object<Sphere>(Vec3d(0,0,-1), 0.5, materials[1].get());
-    scene.add_object<Sphere>(Vec3d(-2, 0,-2), 0.5, materials[0].get());
-    scene.add_object<Sphere>(Vec3d(2, 0,-2), 0.5, materials[0].get());
-    scene.add_object<Sphere>(Vec3d(0,-100.5,-1), 100, materials[2].get());
+    Scene scene {Camera{}};
+    scene.add_object<Sphere>(Vec3d(0,0,-1), 0.5, bronze.get());
+    scene.add_object<Sphere>(Vec3d(-2, 0,-2), 0.5, blue.get());
+    scene.add_object<Sphere>(Vec3d(2, 0,-2), 0.5, mirror.get());
+    scene.add_object<Sphere>(Vec3d(0,-100.5,-1), 100, pink.get());
 
     Image image(200, 100);
 

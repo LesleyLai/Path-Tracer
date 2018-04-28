@@ -109,6 +109,10 @@ constexpr Color operator*(const Color &c, float scalar) noexcept {
     return Color(c.r*scalar, c.g*scalar, c.b*scalar);
 }
 
+constexpr Color operator/(const Color &c, float scalar) noexcept {
+    return Color(c.r/scalar, c.g/scalar, c.b/scalar);
+}
+
 constexpr Color operator*(float scalar, const Color &c) noexcept {
     return Color(c.r*scalar, c.g*scalar, c.b*scalar);
 }

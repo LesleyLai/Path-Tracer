@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "camera.hpp"
 #include "hitable.hpp"
 
 /**
@@ -12,7 +13,7 @@
 class Scene
 {
 public:
-    Scene() noexcept {}
+    explicit Scene(Camera camera) noexcept :camera_{camera} {}
 
     /**
      *  @brief Adds an Hitable object to the scene
@@ -25,7 +26,13 @@ public:
      */
     std::optional<Hit_record> intersect_at(const Ray& r, double t_min, double t_max) const noexcept;
 
+    Camera camera() const noexcept
+    {
+        return camera_;
+    }
+
 private:
+    Camera camera_;
     std::vector<std::unique_ptr<Hitable>> objects_;
 };
 

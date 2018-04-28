@@ -22,3 +22,5 @@ std::optional<Hit_record> Scene::intersect_at(const Ray &r, double t_min, double
 
     return temp_record;
 }
+
+

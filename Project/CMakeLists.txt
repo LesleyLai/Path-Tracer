@@ -1,6 +1,7 @@
 add_library(common
     include/image.hpp
     src/image.cpp
+    include/camera.hpp
     include/color.hpp
     include/hitable.hpp
     include/material.hpp
