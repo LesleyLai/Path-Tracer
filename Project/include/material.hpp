@@ -3,6 +3,7 @@
 
 #include <optional>
 
+#include "angle.hpp"
 #include "color.hpp"
 #include "hitable.hpp"
 #include "ray.hpp"
@@ -64,7 +65,15 @@ private:
 };
 
 class Dielectric : public Material {
+public:
+    Dielectric(Color albedo, double refractive_index) noexcept : Material{albedo},
+        refractive_index_{refractive_index} {}
 
+    std::optional<Ray>
+    scatter(const Ray& ray_in, const Hit_record& record) const override;
+
+private:
+    double refractive_index_;
 };
 
 #endif // MATERIAL_HPP
