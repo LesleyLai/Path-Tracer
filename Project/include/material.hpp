@@ -40,6 +40,9 @@ private:
     Color albedo_ {0.5f, 0.5f, 0.5f};
 };
 
+/**
+ * @brief Lambertian materials only have diffuse reflection
+ */
 class Lambertian : public Material {
 public:
     explicit Lambertian(Color albedo) noexcept : Material{albedo} {}
@@ -58,6 +61,10 @@ public:
 
 private:
     double fuzzness_;
+};
+
+class Dielectric : public Material {
+
 };
 
 #endif // MATERIAL_HPP

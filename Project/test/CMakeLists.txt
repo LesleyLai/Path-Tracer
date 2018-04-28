@@ -4,6 +4,7 @@ add_executable (PathTracingTest "")
 
 target_sources(PathTracingTest
     PRIVATE
+    angle_test.cpp
     camera_test.cpp
     color_test.cpp
     image_test.cpp

@@ -1,4 +1,6 @@
 add_library(common
+    include/angle.hpp
+    src/angle.cpp
     include/image.hpp
     src/image.cpp
     include/camera.hpp
