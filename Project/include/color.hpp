@@ -65,11 +65,11 @@ struct Color {
     }
 
     /**
-     * \brief Operator << of ColorRGB.
+     * @brief Operator << of Color.
      * @tparam CharT  Type of character stream.
      * @tparam Traits  Traits for character type.
-     * \param os The output stream
-     * \param vec The vector to be output.
+     * @param os The output stream
+     * @param color The color to output.
      */
     template <class CharT, class Traits>
     inline friend std::basic_ostream<CharT, Traits>&
@@ -79,6 +79,9 @@ struct Color {
         return os;
     }
 
+    /**
+     * @brief Clamps the RGB values of color to [0, 1)
+     */
     constexpr void clamp() noexcept {
         r = std::clamp(r, 0.0f, 1.0f);
         g = std::clamp(g, 0.0f, 1.0f);

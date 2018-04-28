@@ -9,6 +9,7 @@ add_subdirectory(third-party)
 
 include("cmake/compiler.cmake")
 include("cmake/clang-tidy.cmake")
+include("cmake/doxygen.cmake")
 
 add_subdirectory(Project)
 

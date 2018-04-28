@@ -35,13 +35,18 @@ public:
     Hitable& operator=(Hitable&&) noexcept = default;
 
     /**
-     * @brief Ray-object intersection detection
+     * @brief Detects ray-object intersection
      * @param r The ray to check intersection
+     * @param t_min The minimum distance from ray origin to detect intersection
+     * @param t_max The maximum distance from ray origin to detect intersection
      * @return std::nullopt if the ray do not intersect with the sphere,
      * a Hit_record struct if the ray intersects the sphere
      */
     virtual std::optional<Hit_record> intersect_at(const Ray& r, double t_min, double t_max) noexcept = 0;
 
+    /**
+     * @brief Returns a reference to an objects' material
+     */
     const Material& material() const {
         return *mat_;
     }
