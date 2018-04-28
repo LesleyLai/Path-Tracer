@@ -16,10 +16,12 @@ class Path_tracer
 public:
     Path_tracer();
 
-    Color trace(const Scene& scene, const Ray& ray, size_t depth = max_depth) const noexcept;
+    void run(const Scene& scene);
 
 private:
     mutable std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
+
+    Color trace(const Scene& scene, const Ray& ray, size_t depth = max_depth) const noexcept;
 };
 
 #endif // PATHTRACER_HPP

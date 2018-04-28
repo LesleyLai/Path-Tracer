@@ -18,10 +18,10 @@ std::optional<Hit_record> Sphere::intersect_at(const Ray &r, double t_min, doubl
     const auto t2 = (-b + sqrt_delta) / (2*a);
 
 	auto hit_record_from_t = [&r, this](double t) {
-		Hit_record record{};
-		record.t = t;
-		record.point = r.point_at_parameter(record.t);
-		record.normal = (record.point - center) / radius;
+        const auto point = r.point_at_parameter(t);
+        const auto normal = (point - center) / radius;
+
+        Hit_record record{t, point, normal, &material()};
 		return record;
 	};
 

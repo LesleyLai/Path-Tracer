@@ -26,7 +26,7 @@ private:
 
 template <typename T, class ... Args>
 void Scene::add_object(Args... args) noexcept {
-    objects_.push_back(std::make_unique<T>(args...));
+    objects_.push_back(std::make_unique<T>(std::forward<Args>(args)...));
 }
 
 #endif // SCENE_HPP

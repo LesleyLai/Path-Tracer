@@ -5,6 +5,7 @@
 #include "vector.hpp"
 
 struct Ray;
+class Material;
 
 /**
  * @brief Data recorded for a ray-object intersection
@@ -13,6 +14,7 @@ struct Hit_record {
     double t;
     Vec3d point; ///< Intersection point
     Vec3d normal; ///< Surface normal, need to be construct as a unit vector
+    const Material* material;
 };
 
 /**
@@ -21,6 +23,11 @@ struct Hit_record {
  */
 class Hitable {
 public:
+    /**
+     * @brief Create a hitable object with certain material
+     */
+    Hitable(const Material* mat) : mat_{mat} {}
+
     virtual ~Hitable() = default;
     Hitable(const Hitable&) noexcept = default;
     Hitable& operator=(const Hitable&) noexcept = default;
@@ -35,8 +42,15 @@ public:
      */
     virtual std::optional<Hit_record> intersect_at(const Ray& r, double t_min, double t_max) noexcept = 0;
 
+    const Material& material() const {
+        return *mat_;
+    }
+
 protected:
     Hitable() noexcept = default;
+
+private:
+    const Material* mat_ = nullptr;
 };
 
 #endif // HITABLE_HPP

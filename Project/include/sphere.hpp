@@ -12,7 +12,7 @@ struct Sphere : public Hitable
     Vec3d center;
     double radius = 1;
 
-    Sphere(Vec3d center, double radius): Hitable{},
+    Sphere(Vec3d center, double radius, const Material* mat = nullptr): Hitable{mat},
         center{center}, radius{radius} {}
 
     /**

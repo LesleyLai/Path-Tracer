@@ -1,3 +1,5 @@
+#include <random>
+
 #include "vector.hpp"
 #include "material.hpp"
 
@@ -7,6 +9,8 @@ constexpr Vec3d reflect(Vec3d v, Vec3d n) noexcept {
 
 template <typename Random_generator>
 Vec3d random_in_unit_circle(Random_generator& gen) noexcept {
+    static std::uniform_real_distribution<> dis(-1, 1);
+
     // Standard mersenne_twister_engine seeded with rd()
     Vec3d p;
     do {
@@ -18,12 +22,16 @@ Vec3d random_in_unit_circle(Random_generator& gen) noexcept {
 std::optional<Ray>
 Material::scatter(const Ray &ray_in, const Hit_record &record) const noexcept
 {
+    static std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
+
     switch (type_) {
     case Type::Lambertian:
-        Vec3d target = hit->point + hit->normal + random_in_unit_circle(gen);
-         return damping * trace(scene, Ray{hit->point, target - hit->point}, depth-1);
-        break;
+    {
+        Vec3d target = record.point + record.normal + random_in_unit_circle(gen);
+        return Ray{record.point, target - record.point};
+    }
     case Type::Reflect:
+    {
         auto incident_dir = ray_in.direction / ray_in.direction.length();
         auto reflected = reflect(incident_dir, record.normal);
         if (dot(reflected, record.normal) <= 0) {
@@ -32,6 +40,7 @@ Material::scatter(const Ray &ray_in, const Hit_record &record) const noexcept
 
         Ray scattered {record.point, reflected};
         return scattered;
+    }
     }
 
 

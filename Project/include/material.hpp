@@ -25,9 +25,16 @@ public:
      */
     std::optional<Ray>
     scatter(const Ray& ray_in, const Hit_record& record) const noexcept;
+
+    constexpr float albedo() const noexcept
+    {
+        return albedo_;
+    }
+
+
 private:
-    Type type_ = Type::Lambertian;
     float albedo_ = 0.5f;
+    Type type_ = Type::Lambertian;
 };
 
 #endif // MATERIAL_HPP

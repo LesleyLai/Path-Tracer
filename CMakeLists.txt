@@ -10,7 +10,7 @@ add_subdirectory(third-party)
 include("cmake/compiler.cmake")
 include("cmake/clang-tidy.cmake")
 
-add_subdirectory(PathTracer)
+add_subdirectory(Project)
 
 add_executable(${PROJECT_NAME} "main.cpp")
 target_link_libraries(${PROJECT_NAME} common)

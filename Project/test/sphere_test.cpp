@@ -3,7 +3,6 @@
 #include <catch.hpp>
 #include <limits>
 
-#include <iostream>
 
 constexpr double inf = std::numeric_limits<double>::max();
 
