@@ -3,7 +3,7 @@
 #include <regex>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include "stb/stb_image_write.h"
 
 #include "image.hpp"
 
@@ -11,8 +11,8 @@
 using byte = unsigned char;
 
 
-constexpr byte floatColorTo255(double color) {
-    return static_cast<int>(255.99 * color);
+constexpr byte floatColorTo255(float color) {
+    return static_cast<byte>(255.99f * color);
 }
 
 Image::Image(size_t width, size_t height)
@@ -30,10 +30,9 @@ void Image::saveto(const std::string& filename) const
 	throw Unsupported_image_extension{filename.c_str()};
 	}
 	
-	
 	std::vector<byte> buffer;
 	buffer.reserve(data_.size() * 3);
-	for (auto i = data_.crbegin(), end = data_.crend(); i != end; ++i) {
+    for (auto i = data_.crbegin(), end = data_.crend(); i != end; ++i) {
 		byte red = floatColorTo255(std::sqrt(i->r));
 		byte green = floatColorTo255(std::sqrt(i->g));
 		byte blue = floatColorTo255(std::sqrt(i->b));

@@ -45,7 +45,7 @@ void Path_tracer::run(const Scene& scene, Image& image, size_t sample_per_pixel)
     for (size_t j = 0; j < height; ++j) {
         for (size_t i = 0; i < width; ++i) {
             Color c;
-            for (index_t sample = 0; sample < sample_per_pixel; ++sample) {
+            for (size_t sample = 0; sample < sample_per_pixel; ++sample) {
                 const double u = (i + dis(gen)) / width;
                 const double v = (j + dis(gen)) / height;
 

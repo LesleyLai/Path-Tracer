@@ -8,8 +8,6 @@
 
 #include "color.hpp"
 
-using index_t = std::ptrdiff_t;
-
 struct Unsupported_image_extension : public std::invalid_argument {
     Unsupported_image_extension(const char* filename) : std::invalid_argument{filename} {}
 };
