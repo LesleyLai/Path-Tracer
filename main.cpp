@@ -20,13 +20,17 @@ try {
     auto glass = std::make_unique<Dielectric>(Color(1.f, 1.f, 1.f), 8);
     auto mirror = std::make_unique<Metal>(Color(0.9f, 0.9f, 0.9f), 0.1);
 
-    Scene scene {Camera{}};
+    constexpr int width = 200, height = 100;
+    constexpr auto aspect_ratio = static_cast<float>(width) / height;
+
+    Image image(width, height);
+
+    Scene scene {Camera{30.0_deg, aspect_ratio}};
     scene.add_object<Sphere>(Vec3f(0,0,-1), 0.5, glass.get());
     scene.add_object<Sphere>(Vec3f(-2, 0,-2), 0.5, blue.get());
     scene.add_object<Sphere>(Vec3f(2, 0,-2), 0.5, mirror.get());
     scene.add_object<Sphere>(Vec3f(0,-100.5,-1), 100, pink.get());
 
-    Image image(1600, 800);
 
     auto start = std::chrono::system_clock::now();
     path_tracer.run(scene, image, 800);
