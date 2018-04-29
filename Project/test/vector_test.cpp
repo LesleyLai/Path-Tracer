@@ -88,4 +88,13 @@ TEST_CASE("Vectors", "[math]")
         REQUIRE(v.length_square() == Approx(14));
         REQUIRE(v.length() == Approx(std::sqrt(14)));
     }
+
+    SECTION("Get a unit vector with the same direction of the original vector")
+    {
+        const auto u = unit_vector(v);
+        const auto length = v.length();
+        REQUIRE(u.x == Approx(v.x / length));
+        REQUIRE(u.y == Approx(v.y / length));
+        REQUIRE(u.z == Approx(v.z / length));
+    }
 }

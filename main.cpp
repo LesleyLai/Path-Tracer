@@ -25,7 +25,11 @@ try {
 
     Image image(width, height);
 
-    Scene scene {Camera{30.0_deg, aspect_ratio}};
+    Camera camera{Vec3f{-1, 3, 0}, Vec3f{0, 0, -1}, Vec3f{0, 1, 0},
+                  90.0_deg, aspect_ratio};
+
+    Scene scene{camera};
+
     scene.add_object<Sphere>(Vec3f(0,0,-1), 0.5, glass.get());
     scene.add_object<Sphere>(Vec3f(-2, 0,-2), 0.5, blue.get());
     scene.add_object<Sphere>(Vec3f(2, 0,-2), 0.5, mirror.get());

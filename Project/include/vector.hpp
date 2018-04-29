@@ -25,7 +25,7 @@
     constexpr const value_type& operator[](size_type i) const noexcept {return elems[i];} \
                                         \
     constexpr value_type length_square() const noexcept {return dot(*this, *this);} \
-    constexpr value_type length() const noexcept {return std::sqrt(length_square());} \
+    constexpr value_type length() const noexcept {return std::sqrt(length_square());}
 
 /**
  * @brief Template of fix-sized vectors
@@ -272,6 +272,16 @@ template<typename T, size_t size>
 constexpr bool operator!=(const Vector<T, size>& lhs,
                           const Vector<T, size>& rhs) noexcept {
     return !(lhs == rhs);
+}
+
+
+/**
+ * @brief Get a unit vector point to certain direction.
+ * @related Vector
+ */
+template<typename T, size_t size>
+constexpr Vector<T, size> unit_vector(const Vector<T, size>& vec) noexcept {
+    return vec / vec.length();
 }
 
 /**
