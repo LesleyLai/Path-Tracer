@@ -24,7 +24,9 @@ public:
     /**
      * @brief Returns the hit record at the closet hit point
      */
-    std::optional<Hit_record> intersect_at(const Ray& r, double t_min, double t_max) const noexcept;
+    std::optional<Hit_record> intersect_at(const Ray& r,
+                                           double t_min,
+                                           double t_max) const noexcept;
 
     Camera camera() const noexcept
     {

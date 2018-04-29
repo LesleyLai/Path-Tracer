@@ -12,8 +12,6 @@
 #include "image.hpp"
 #include "scene.hpp"
 
-constexpr size_t samples_count = 200;
-
 Color Path_tracer::trace(const Scene &scene, const Ray &ray, size_t depth) const noexcept
 {
     constexpr double inf = std::numeric_limits<double>::infinity();
@@ -38,7 +36,7 @@ Color Path_tracer::trace(const Scene &scene, const Ray &ray, size_t depth) const
     return (1.f - t) * Color{1,1,1} + t * Color(0.5f, 0.7f, 1);
 }
 
-void Path_tracer::run(const Scene& scene, Image& image)
+void Path_tracer::run(const Scene& scene, Image& image, size_t sample_per_pixel)
 {
     const auto width = image.width(), height = image.height();
 
@@ -47,14 +45,14 @@ void Path_tracer::run(const Scene& scene, Image& image)
     for (size_t j = 0; j < height; ++j) {
         for (size_t i = 0; i < width; ++i) {
             Color c;
-            for (index_t sample = 0; sample < samples_count; ++sample) {
+            for (index_t sample = 0; sample < sample_per_pixel; ++sample) {
                 const double u = (i + dis(gen)) / width;
                 const double v = (j + dis(gen)) / height;
 
                 const auto r = scene.camera().getRay(u, v);
                 c += trace(scene, r);
             }
-            c /= static_cast<float>(samples_count);
+            c /= static_cast<float>(sample_per_pixel);
             image.color_at(i, j) = c;
         }
         std::cout << (j / static_cast<double>(height) * 100) << "%\n" << std::flush;

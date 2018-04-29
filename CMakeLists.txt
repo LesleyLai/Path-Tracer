@@ -5,6 +5,7 @@ project(PathTracing)
 add_subdirectory(third-party)
 
 include("cmake/compiler.cmake")
+include("cmake/clangformat.cmake")
 include("cmake/clang-tidy.cmake")
 include("cmake/doxygen.cmake")
 

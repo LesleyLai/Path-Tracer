@@ -55,25 +55,25 @@ public:
 
 class Metal : public Material {
 public:
-    Metal(Color albedo, double fuzzness) noexcept : Material{albedo}, fuzzness_{fuzzness} {}
+    Metal(Color albedo, float fuzzness) noexcept : Material{albedo}, fuzzness_{fuzzness} {}
 
     std::optional<Ray>
     scatter(const Ray& ray_in, const Hit_record& record) const override;
 
 private:
-    double fuzzness_;
+    float fuzzness_;
 };
 
 class Dielectric : public Material {
 public:
-    Dielectric(Color albedo, double refractive_index) noexcept : Material{albedo},
+    Dielectric(Color albedo, float refractive_index) noexcept : Material{albedo},
         refractive_index_{refractive_index} {}
 
     std::optional<Ray>
     scatter(const Ray& ray_in, const Hit_record& record) const override;
 
 private:
-    double refractive_index_;
+    float refractive_index_;
 };
 
 #endif // MATERIAL_HPP

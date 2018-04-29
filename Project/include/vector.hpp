@@ -290,7 +290,10 @@ std::ostream& operator<<(std::ostream& os, const Vector<T, size>& v) noexcept
     return os;
 }
 
-using Vec2d = Vector<double, 2>; ///< @brief 2D float point vector type
-using Vec3d = Vector<double, 3>; ///< @brief 3D float point vector type
-using Vec4d = Vector<double, 4>; ///< @brief 4D float point vector type
+using Vec2f = Vector<float, 2>; ///< @brief 2D single-precision float point vector type
+using Vec3f = Vector<float, 3>; ///< @brief 3D single-precision float point vector type
+using Vec4f = Vector<float, 4>; ///< @brief 4D single-precision float point vector type
 
+using Vec2d = Vector<double, 2>; ///< @brief 2D double-precision float point vector type
+using Vec3d = Vector<double, 3>; ///< @brief 3D double-precision float point vector type
+using Vec4d = Vector<double, 4>; ///< @brief 4D double-precision float point vector type

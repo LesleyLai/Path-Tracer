@@ -3,12 +3,12 @@
 #include "ray.hpp"
 
 TEST_CASE("Ray", "[geometry]") {
-    const Vec3d origin = {1, 1, 1};
-    const Vec3d direction = {0, 0, 1};
+    const Vec3f origin = {1, 1, 1};
+    const Vec3f direction = {0, 0, 1};
 
     SECTION("Default construct a ray at origin") {
         Ray default_ray;
-        REQUIRE(default_ray.origin == Vec3d{0,0,0});
+        REQUIRE(default_ray.origin == Vec3f{0,0,0});
     }
 
     SECTION("Construct a ray with input") {
@@ -20,7 +20,7 @@ TEST_CASE("Ray", "[geometry]") {
 
     SECTION("Gets correct point at parameter t from the ray function") {
         Ray ray {origin, direction};
-        const auto expect_dest = origin + 3. * direction;
+        const auto expect_dest = origin + 3.f * direction;
         const auto dest = ray.point_at_parameter(3);
 
         REQUIRE(expect_dest.x == Approx(dest.x));

@@ -17,19 +17,19 @@ try {
 
     auto pink = std::make_unique<Lambertian>(Color(0.8f, 0.2f, 0.2f));
     auto blue = std::make_unique<Lambertian>(Color(0.5f, 0.8f, 0.8f));
-    auto glass = std::make_unique<Dielectric>(Color(1.f, 1.f, 1.f), 1.5);
+    auto glass = std::make_unique<Dielectric>(Color(1.f, 1.f, 1.f), 8);
     auto mirror = std::make_unique<Metal>(Color(0.9f, 0.9f, 0.9f), 0.1);
 
     Scene scene {Camera{}};
-    scene.add_object<Sphere>(Vec3d(0,0,-1), 0.5, glass.get());
-    scene.add_object<Sphere>(Vec3d(-2, 0,-2), 0.5, blue.get());
-    scene.add_object<Sphere>(Vec3d(2, 0,-2), 0.5, mirror.get());
-    scene.add_object<Sphere>(Vec3d(0,-100.5,-1), 100, pink.get());
+    scene.add_object<Sphere>(Vec3f(0,0,-1), 0.5, glass.get());
+    scene.add_object<Sphere>(Vec3f(-2, 0,-2), 0.5, blue.get());
+    scene.add_object<Sphere>(Vec3f(2, 0,-2), 0.5, mirror.get());
+    scene.add_object<Sphere>(Vec3f(0,-100.5,-1), 100, pink.get());
 
-    Image image(200, 100);
+    Image image(1600, 800);
 
     auto start = std::chrono::system_clock::now();
-    path_tracer.run(scene, image);
+    path_tracer.run(scene, image, 800);
     auto end = std::chrono::system_clock::now();
 
     std::cout << "elapsed time: ";
@@ -40,7 +40,7 @@ try {
         std::cout << duration_cast<seconds>(elapsed_time).count() << "s\n";
     } else {
         auto s = duration_cast<seconds>(elapsed_time).count();
-        std::cout << s / 60 << "min " << s % 60 << "s";
+        std::cout << s / 60 << "min " << s % 60 << "s\n";
     }
 
     std::string filename {"test.png"};

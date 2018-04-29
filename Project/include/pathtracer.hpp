@@ -16,7 +16,7 @@ class Path_tracer
 public:
     Path_tracer() = default;
 
-    void run(const Scene& scene, Image& image);
+    void run(const Scene& scene, Image& image, size_t sample_per_pixel);
 
 private:
     mutable std::mt19937 gen = std::mt19937{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()

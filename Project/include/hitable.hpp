@@ -12,8 +12,8 @@ class Material;
  */
 struct Hit_record {
     double t;
-    Vec3d point; ///< Intersection point
-    Vec3d normal; ///< Surface normal, need to be construct as a unit vector
+    Vec3f point; ///< Intersection point
+    Vec3f normal; ///< Surface normal, need to be construct as a unit vector
     const Material* material;
 };
 

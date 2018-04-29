@@ -1,3 +1,4 @@
 CMakeLists.txt.user
 .vs
+bin
 docs/build
