@@ -12,6 +12,6 @@ include("cmake/doxygen.cmake")
 add_subdirectory(Project)
 
 add_executable(${PROJECT_NAME} "main.cpp")
-target_link_libraries(${PROJECT_NAME} common)
+target_link_libraries(${PROJECT_NAME} common pthread)
 
 enable_testing ()

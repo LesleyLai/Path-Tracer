@@ -87,7 +87,6 @@ try {
     std::cout << "elapsed time: ";
     print_elapse_time(end - start);
 
-
     std::string filename {"test.png"};
     image.saveto(filename);
     std::cout << "Save image to " << filename << '\n';
