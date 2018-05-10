@@ -1,7 +1,7 @@
 #include "sphere.hpp"
 #include "ray.hpp"
 
-std::optional<Hit_record> Sphere::intersect_at(const Ray &r, double t_min, double t_max) noexcept {
+std::optional<Hit_record> Sphere::intersect_at(const Ray &r, float t_min, float t_max) const noexcept {
     const auto oc = r.origin - center;
 
     const auto a = dot(r.direction, r.direction);
@@ -17,12 +17,12 @@ std::optional<Hit_record> Sphere::intersect_at(const Ray &r, double t_min, doubl
     const auto t1 = (-b - sqrt_delta) / (2*a);
     const auto t2 = (-b + sqrt_delta) / (2*a);
 
-	auto hit_record_from_t = [&r, this](double t) {
+    auto hit_record_from_t = [&r, this](float t) {
         const auto point = r.point_at_parameter(t);
         const auto normal = (point - center) / radius;
 
-        Hit_record record{t, point, normal, &material()};
-		return record;
+        Hit_record record{t, point, normal, &material};
+        return std::optional<Hit_record>{std::in_place, record};
 	};
 
     // Get the smaller non-negative value of t1, t2

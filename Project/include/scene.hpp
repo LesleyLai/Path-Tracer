@@ -3,9 +3,10 @@
 
 #include <memory>
 #include <vector>
+#include <type_traits>
 
 #include "camera.hpp"
-#include "hitable.hpp"
+#include "sphere.hpp"
 
 /**
  * @brief The Scene class represent the scene to be rendered by Path tracer
@@ -25,8 +26,8 @@ public:
      * @brief Returns the hit record at the closet hit point
      */
     std::optional<Hit_record> intersect_at(const Ray& r,
-                                           double t_min,
-                                           double t_max) const noexcept;
+                                           float t_min,
+                                           float t_max) const noexcept;
 
     Camera camera() const noexcept
     {
@@ -35,17 +36,21 @@ public:
 
 private:
     Camera camera_;
-    std::vector<std::unique_ptr<Hitable>> objects_;
+    std::vector<Sphere> spheres_;
 };
 
 /**
- * @tparam T The type of Hitable object we want to add to the scene
+ * @tparam T The type of Sphere object we want to add to the scene
  * @tparam ...Args Type of the arguments passed to your object constructor
  * @param args The arguments passed to your object constructor
  */
-template <typename T, class ... Args>
+template <class T, class ... Args>
 void Scene::add_object(Args... args) noexcept {
-    objects_.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+    if constexpr (std::is_same<T, Sphere>::value) {
+        spheres_.emplace_back(std::forward<Args>(args)...);
+    } else {
+        static_assert(!std::is_same<T,T>::value, "Unsupported object primitive type");
+    }
 }
 
 #endif // SCENE_HPP

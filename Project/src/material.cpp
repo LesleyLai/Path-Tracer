@@ -4,6 +4,30 @@
 #include "vector.hpp"
 #include "material.hpp"
 
+namespace {
+std::optional<Ray> lambertian_scatter(const Hit_record& record);
+
+std::optional<Ray> metal_scatter(const Ray& ray_in,
+                                 const Hit_record& record, float fuzzness);
+
+std::optional<Ray> dielectric_scatter(const Ray &ray_in,
+                                      const Hit_record &record,
+                                      float refractive_index);
+} // anoymous namespace
+
+std::optional<Ray> Material::scatter(const Ray &ray_in, const Hit_record &record) const
+{
+    switch (type_) {
+    case Type::Lambertian:
+        return lambertian_scatter(record);
+    case Type::Metal:
+        return metal_scatter(ray_in, record, fuzzness_);
+    case Type::Dielectric:
+        return dielectric_scatter(ray_in, record, refractive_index_);
+    }
+}
+
+namespace {
 constexpr Vec3f reflect(Vec3f v, Vec3f n) noexcept {
     return v - 2 * dot(v, n) * n;
 }
@@ -30,16 +54,23 @@ Vec3f random_in_unit_circle() {
     return p;
 }
 
-std::optional<Ray> Lambertian::scatter(const Ray& /*ray_in*/, const Hit_record& record) const
+// Reflectivity by Christophe Schlick
+float schlick(float cosine, float ref_idx) {
+    float r0 = (1 - ref_idx) / (1 + ref_idx);
+    r0 *= r0;
+    return r0 + (1-r0) * std::pow(1-cosine, 5);
+}
+
+std::optional<Ray> lambertian_scatter(const Hit_record& record)
 {
     Vec3f target = record.point + record.normal + random_in_unit_circle();
     return Ray{record.point, target - record.point};
 }
 
-std::optional<Ray> Metal::scatter(const Ray& ray_in, const Hit_record& record) const
+std::optional<Ray> metal_scatter(const Ray& ray_in, const Hit_record& record, float fuzzness)
 {
     auto incident_dir = ray_in.direction / ray_in.direction.length();
-    auto reflected = reflect(incident_dir, record.normal) + fuzzness_ * random_in_unit_circle();
+    auto reflected = reflect(incident_dir, record.normal) + fuzzness * random_in_unit_circle();
     if (dot(reflected, record.normal) <= 0) {
         return std::nullopt;
     }
@@ -48,25 +79,20 @@ std::optional<Ray> Metal::scatter(const Ray& ray_in, const Hit_record& record) c
     return scattered;
 }
 
-// Reflectivity by Christophe Schlick
-float schlick(float cosine, float ref_idx) {
-    float r0 = (1 - ref_idx) / (1 + ref_idx);
-    r0 *= r0;
-    return r0 + (1-r0) * std::pow(1-cosine, 5);
-}
-
-std::optional<Ray> Dielectric::scatter(const Ray &ray_in, const Hit_record &record) const
+std::optional<Ray> dielectric_scatter(const Ray &ray_in,
+                                      const Hit_record &record,
+                                      float refractive_index)
 {
     Vec3f out_normal;
     float ni_over_nt;
     float cosine;
     if (dot(ray_in.direction, record.normal) > 0) {
         out_normal = -record.normal;
-        ni_over_nt = refractive_index_;
-        cosine = refractive_index_ * dot(ray_in.direction, record.normal) / ray_in.direction.length();
+        ni_over_nt = refractive_index;
+        cosine = refractive_index * dot(ray_in.direction, record.normal) / ray_in.direction.length();
     } else {
         out_normal = record.normal;
-        ni_over_nt = 1 / refractive_index_;
+        ni_over_nt = 1 / refractive_index;
         cosine = -dot(ray_in.direction, record.normal) / ray_in.direction.length();
     }
 
@@ -74,7 +100,7 @@ std::optional<Ray> Dielectric::scatter(const Ray &ray_in, const Hit_record &reco
 
     auto refraction = refract(ray_in.direction, out_normal, ni_over_nt);
     if (refraction) {
-        reflection_prob = schlick(cosine, refractive_index_);
+        reflection_prob = schlick(cosine, refractive_index);
     }
 
     static std::uniform_real_distribution<float> dis(0, 1);
@@ -87,3 +113,4 @@ std::optional<Ray> Dielectric::scatter(const Ray &ray_in, const Hit_record &reco
     }
         return Ray(record.point, *refraction);
 }
+} // anoymous namespace

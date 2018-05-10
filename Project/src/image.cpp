@@ -7,10 +7,7 @@
 
 #include "image.hpp"
 
-
 using byte = unsigned char;
-
-
 constexpr byte floatColorTo255(float color) {
     return static_cast<byte>(255.99f * color);
 }

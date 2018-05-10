@@ -15,7 +15,7 @@
 Color Path_tracer::trace(const Scene &scene, const Ray &ray, size_t depth) const noexcept
 {
     constexpr double inf = std::numeric_limits<double>::infinity();
-    constexpr size_t max_depth = 50;
+    constexpr size_t max_depth = 100;
 
     // depth exceed some threshold
     if (depth >= max_depth) {
@@ -40,14 +40,14 @@ void Path_tracer::run(const Scene& scene, Image& image, size_t sample_per_pixel)
 {
     const auto width = image.width(), height = image.height();
 
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    thread_local std::uniform_real_distribution<float> dis(0.0, 1.0);
 
     for (size_t j = 0; j < height; ++j) {
         for (size_t i = 0; i < width; ++i) {
             Color c;
             for (size_t sample = 0; sample < sample_per_pixel; ++sample) {
-                const double u = (i + dis(gen)) / width;
-                const double v = (j + dis(gen)) / height;
+                const float u = (i + dis(gen)) / width;
+                const float v = (j + dis(gen)) / height;
 
                 const auto r = scene.camera().getRay(u, v);
                 c += trace(scene, r);
