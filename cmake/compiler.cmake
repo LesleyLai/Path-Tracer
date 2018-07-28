@@ -25,10 +25,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compiler_flags(-Wno-sign-compare)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compiler_flags(-stdlib=libc++)
-endif()
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_definitions(-D_CRT_SECURE_NO_WARNINGS) # Suppress C4996
 
