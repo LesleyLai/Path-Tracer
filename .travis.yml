@@ -1,5 +1,5 @@
 language: cpp
-sudo: true
+sudo: require
 
 os: linux
 dist: trusty
@@ -14,9 +14,11 @@ matrix:
         - ubuntu-toolchain-r-test
         packages:
         - g++-7
-    env:
-    - C=gcc-7
-    - CXX=g++-7
+    before_script:
+      - sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
+      - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
+      - export CC=/usr/bin/gcc-7
+      - export CXX=/usr/bin/g++-7
 
   - os: linux
     compiler: clang
@@ -30,12 +32,13 @@ matrix:
         packages:
         - clang-6.0
         - libstdc++6
-    env:
-    - C=clang-6.0
-    - CXX=clang++-6.0
+    before_script:
+      - sudo ln -s /usr/bin/clang-6.0 /usr/local/bin/clang
+      - sudo ln -s /usr/bin/clang++-6.0 /usr/local/bin/clang++
+      - export CC=/usr/bin/clang-6.0
+      - export CXX=/usr/bin/clang++-6.0
 
-before_script:
-  - cmake --version
+
 
 script:
   - mkdir build
