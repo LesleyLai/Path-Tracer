@@ -1,5 +1,5 @@
 language: cpp
-sudo: false
+sudo: true
 compiler:
   - clang
   - gcc
@@ -7,22 +7,39 @@ compiler:
 os: linux
 dist: trusty
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc
-      - g++
-      - clang
-      - cmake
+matrix:
+  include:
+  - os: linux
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-7
+    env:
+    - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
-script:
-  - gcc -v && g++ -v
+  - os: linux
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-trusty-6.0
+        - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main'
+          key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+        packages:
+        - clang-6.0
+        - libstdc++6
+    env:
+    - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+
+before_script:
   - clang -v
   - cmake --version
 
+script:
   - mkdir build
   - cd build
-  - cmake .. && make
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  -  make
   - ./PathTracingTest
