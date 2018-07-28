@@ -12,7 +12,7 @@ function(add_compiler_flags)
 endfunction()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_compiler_flags(/std:c++latest) # force standard conformance
+    add_compiler_flags(/std:c++latest)
 else()
     set (CMAKE_CXX_STANDARD 17)
     set (CMAKE_CXX_STANDARD_REQUIRED ON)

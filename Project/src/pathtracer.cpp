@@ -43,15 +43,17 @@ struct PixelData {
   size_t y{};
 };
 
-void Path_tracer::run(const Scene& scene, Image& image, size_t sample_per_pixel)
+void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
+                      size_t sample_per_pixel)
 {
   const auto width = image.width(), height = image.height();
 
   std::vector<std::future<PixelData>> results;
   for (size_t j = 0; j < height; ++j) {
     for (size_t i = 0; i < width; ++i) {
-      results.push_back(std::async(
-          std::launch::async, [i, j, sample_per_pixel, width, height, &scene] {
+      results.push_back(
+          std::async(std::launch::async, [i, j, sample_per_pixel, width, height,
+                                          &scene, &camera] {
             Color c;
 
             thread_local std::mt19937 gen = std::mt19937{
@@ -63,7 +65,7 @@ void Path_tracer::run(const Scene& scene, Image& image, size_t sample_per_pixel)
               const float u = (i + dis(gen)) / width;
               const float v = (j + dis(gen)) / height;
 
-              const auto r = scene.camera().getRay(u, v);
+              const auto r = camera.getRay(u, v);
               c += trace(scene, r);
             }
             c /= static_cast<float>(sample_per_pixel);

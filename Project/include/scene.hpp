@@ -13,7 +13,7 @@
  */
 class Scene {
 public:
-  explicit Scene(Camera camera) noexcept : camera_{camera} {}
+  Scene() noexcept = default;
 
   /**
    *  @brief Adds an Hitable object to the scene
@@ -26,10 +26,7 @@ public:
   std::optional<Hit_record> intersect_at(const Ray& r, float t_min,
                                          float t_max) const noexcept;
 
-  Camera camera() const noexcept { return camera_; }
-
 private:
-  Camera camera_;
   std::vector<Sphere> spheres_;
 };
 
