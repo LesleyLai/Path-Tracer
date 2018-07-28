@@ -7,6 +7,7 @@ dist: trusty
 matrix:
   include:
   - os: linux
+    compiler: gcc
     addons:
       apt:
         sources:
@@ -14,9 +15,10 @@ matrix:
         packages:
         - g++-7
     env:
-    - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - COMPILER=g++-7
 
   - os: linux
+    compiler: clang
     addons:
       apt:
         sources:
@@ -28,10 +30,9 @@ matrix:
         - clang-6.0
         - libstdc++6
     env:
-    - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+    - COMPILER=clang++-6.0
 
 before_script:
-  - clang -v
   - cmake --version
 
 script:
