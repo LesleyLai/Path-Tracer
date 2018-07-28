@@ -15,7 +15,8 @@ matrix:
         packages:
         - g++-7
     env:
-    - COMPILER=g++-7
+    - C=gcc-7
+    - CXX=g++-7
 
   - os: linux
     compiler: clang
@@ -30,7 +31,8 @@ matrix:
         - clang-6.0
         - libstdc++6
     env:
-    - COMPILER=clang++-6.0
+    - C=clang-6.0
+    - CXX=clang++-6.0
 
 before_script:
   - cmake --version
