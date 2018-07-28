@@ -2,6 +2,7 @@
 
 #include "camera.hpp"
 
-TEST_CASE("Camera", "[Scene]") {
-    // TODO(lesley):
+TEST_CASE("Camera", "[Scene]")
+{
+  // TODO(lesley):
 }

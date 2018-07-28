@@ -9,14 +9,12 @@ class Image;
 struct Ray;
 struct Color;
 
-
-class Path_tracer
-{
+class Path_tracer {
 
 public:
-    Path_tracer() = default;
+  Path_tracer() = default;
 
-    void run(const Scene& scene, Image& image, size_t sample_per_pixel);
+  void run(const Scene& scene, Image& image, size_t sample_per_pixel);
 };
 
 #endif // PATHTRACER_HPP
