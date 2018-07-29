@@ -14,7 +14,6 @@ target_sources(PathTracingTest
     sphere_test.cpp
     scene_test.cpp
     main.cpp
-    math_util_test.cpp
     )
 
 target_link_libraries(PathTracingTest common catch2)

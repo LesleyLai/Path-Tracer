@@ -3,7 +3,7 @@
 
 #include "angle.hpp"
 
-TEST_CASE("[angle] Radian arithmetics")
+TEST_CASE("Radian arithmetics", "[Math]")
 {
   Radian pi_o_4{pi / 4};
   Radian pi_o_2{pi / 2};
@@ -64,7 +64,7 @@ TEST_CASE("[angle] Radian arithmetics")
   }
 }
 
-TEST_CASE("[angle] degree arithmetics")
+TEST_CASE("degree arithmetics", "[Math]")
 {
   Radian degree_30{30};
   Radian degree_60{60};
@@ -118,7 +118,7 @@ TEST_CASE("[angle] degree arithmetics")
   }
 }
 
-TEST_CASE("[angle] Convert between degree and radian")
+TEST_CASE("Convert between degree and radian", "[Math]")
 {
   SECTION("Degree to radian")
   {
@@ -135,7 +135,7 @@ TEST_CASE("[angle] Convert between degree and radian")
   }
 }
 
-TEST_CASE("[angle] Comparison of degree and radian")
+TEST_CASE("Comparison of degree and radian", "[Math]")
 {
   SECTION("equal")
   {
@@ -174,7 +174,7 @@ TEST_CASE("[angle] Comparison of degree and radian")
   }
 }
 
-TEST_CASE("[angle] String conversions")
+TEST_CASE("String conversions", "[Math]")
 {
   std::stringstream ss;
 

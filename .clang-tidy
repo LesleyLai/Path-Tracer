@@ -15,6 +15,7 @@ Checks:          '*,
 -google-runtime-references,
 -google-build-using-namespace,
 -hicpp-no-malloc,
+-hicpp-braces-around-statements
 '
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
