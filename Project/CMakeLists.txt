@@ -7,6 +7,7 @@ add_library(common
     include/color.hpp
     include/hitable.hpp
     include/material.hpp
+    include/math_util.hpp
     src/material.cpp
     include/vector.hpp
     include/ray.hpp

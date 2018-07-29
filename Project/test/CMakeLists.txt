@@ -4,6 +4,7 @@ add_executable (PathTracingTest "")
 
 target_sources(PathTracingTest
     PRIVATE
+    aabb_test.cpp
     angle_test.cpp
     camera_test.cpp
     color_test.cpp
@@ -13,6 +14,7 @@ target_sources(PathTracingTest
     sphere_test.cpp
     scene_test.cpp
     main.cpp
+    math_util_test.cpp
     )
 
 target_link_libraries(PathTracingTest common catch2)
