@@ -1,6 +1,9 @@
 #ifndef AABB_HPP
 #define AABB_HPP
 
+#include <algorithm>
+#include <ostream>
+
 #include "ray.hpp"
 #include "vector.hpp"
 
@@ -46,5 +49,28 @@ private:
   Vec3f min_ = {};
   Vec3f max_ = {};
 };
+
+constexpr bool operator==(const AABB& lhs, const AABB& rhs)
+{
+  return lhs.min() == rhs.min() && lhs.max() == rhs.max();
+}
+
+constexpr bool operator!=(const AABB& lhs, const AABB& rhs)
+{
+  return !(lhs == rhs);
+}
+
+/**
+ * @brief Computes the bounding box for two AABBs
+ */
+constexpr AABB surrounding_box(const AABB box0, const AABB box1)
+{
+  return AABB{Vec3f{std::min(box0.min().x, box1.min().x),
+                    std::min(box0.min().y, box1.min().y),
+                    std::min(box0.min().z, box1.min().z)},
+              Vec3f{std::max(box0.max().x, box1.max().x),
+                    std::max(box0.max().y, box1.max().y),
+                    std::max(box0.max().z, box1.max().z)}};
+}
 
 #endif // AABB_HPP

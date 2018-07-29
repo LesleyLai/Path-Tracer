@@ -38,3 +38,10 @@ TEST_CASE("Ray/AABB intersection", "[AABB]")
     REQUIRE(box.hit(r, 0, 0.9f) == false);
   }
 }
+
+TEST_CASE("Compose AABBs", "[AABB]")
+{
+  AABB box0{{0, 0, 0}, {1, 1, 1}};
+  AABB box1{{-1, -1, -1}, {0.5, 0.5, 0.5}};
+  REQUIRE(surrounding_box(box0, box1) == AABB{{-1, -1, -1}, {1, 1, 1}});
+}

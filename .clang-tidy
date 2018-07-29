@@ -1,5 +1,6 @@
 ---
 Checks:          '*,
+-clang-analyzer-deadcode.DeadStores,
 -clang-analyzer-alpha.*,
 -abseil-string-find-startswith,
 -readability-braces-around-statements,

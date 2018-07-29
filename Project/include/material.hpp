@@ -12,8 +12,8 @@ class Material {
 public:
   enum class Type { Lambertian, Metal, Dielectric };
 
-  Material(Type type, Color albedo, float fuzzness = 0,
-           float refractive_index = 0) noexcept
+  constexpr Material(Type type, Color albedo, float fuzzness = 0,
+                     float refractive_index = 0) noexcept
       : type_{type}, albedo_{albedo}, fuzzness_{fuzzness}, refractive_index_{
                                                                refractive_index}
   {

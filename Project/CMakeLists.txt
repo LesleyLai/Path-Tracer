@@ -1,4 +1,5 @@
 add_library(common
+    include/aabb.hpp
     include/angle.hpp
     src/angle.cpp
     include/image.hpp
