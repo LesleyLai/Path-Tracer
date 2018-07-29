@@ -1,8 +1,8 @@
 #include "sphere.hpp"
 #include "ray.hpp"
 
-std::optional<Hit_record> Sphere::intersect_at(const Ray& r, float t_min,
-                                               float t_max) const noexcept
+Maybe_hit_t Sphere::intersect_at(const Ray& r, float t_min, float t_max) const
+    noexcept
 {
   const auto oc = r.origin - center;
 

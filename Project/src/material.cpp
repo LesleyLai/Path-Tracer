@@ -26,6 +26,7 @@ std::optional<Ray> Material::scatter(const Ray& ray_in,
   case Type::Dielectric:
     return dielectric_scatter(ray_in, record, refractive_index_);
   }
+  return {};
 }
 
 namespace {

@@ -321,7 +321,9 @@ std::ostream& operator<<(std::ostream& os, const Vector<T, size>& v) noexcept
   os << "vec(";
   for (size_t i = 0, last = size - 1; i != size; ++i) {
     os << v[i];
-    if (i != last) os << ',';
+    if (i != last) {
+      os << ',';
+    }
   }
   os << ")";
   return os;

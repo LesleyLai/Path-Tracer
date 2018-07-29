@@ -17,10 +17,10 @@ void populateScene(Scene& scene)
   Material bubble{Material::Type::Dielectric, Color(1.f, 1.f, 1.f), 0, 1.1f};
   Material mirror{Material::Type::Metal, Color(0.9f, 0.9f, 0.9f), 0.1f};
 
-  scene.add_object<Sphere>(Vec3f(0, -1000, 0), 1000, grey);
-  scene.add_object<Sphere>(Vec3f(1, 2, 0), 1, bubble);
-  scene.add_object<Sphere>(Vec3f(-4, 1, 0), 1, blue);
-  scene.add_object<Sphere>(Vec3f(4, 1, 0), 1, mirror);
+  scene.add_object<Sphere>(Vec3f(0, -1000, 0), 1000.f, grey);
+  scene.add_object<Sphere>(Vec3f(1, 2, 0), 1.f, bubble);
+  scene.add_object<Sphere>(Vec3f(-4, 1, 0), 1.f, blue);
+  scene.add_object<Sphere>(Vec3f(4, 1, 0), 1.f, mirror);
 
   thread_local auto gen = std::mt19937{std::random_device{}()};
   thread_local std::uniform_real_distribution<float> dis(0.0, 1.0);

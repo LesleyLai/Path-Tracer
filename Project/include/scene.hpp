@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "camera.hpp"
-#include "sphere.hpp"
+#include "hitable.hpp"
 
 /**
  * @brief The Scene class represent the scene to be rendered by Path tracer
@@ -23,11 +23,11 @@ public:
   /**
    * @brief Returns the hit record at the closet hit point
    */
-  std::optional<Hit_record> intersect_at(const Ray& r, float t_min,
-                                         float t_max) const noexcept;
+  Maybe_hit_t intersect_at(const Ray& r, float t_min, float t_max) const
+      noexcept;
 
 private:
-  std::vector<Sphere> spheres_;
+  std::vector<std::unique_ptr<Hitable>> objects_;
 };
 
 /**
@@ -37,8 +37,8 @@ private:
  */
 template <class T, class... Args> void Scene::add_object(Args... args) noexcept
 {
-  if constexpr (std::is_same<T, Sphere>::value) {
-    spheres_.emplace_back(std::forward<Args>(args)...);
+  if constexpr (std::is_base_of<Hitable, T>::value) {
+    objects_.push_back(std::make_unique<T>(std::forward<Args>(args)...));
   }
   else {
     static_assert(!std::is_same<T, T>::value,
