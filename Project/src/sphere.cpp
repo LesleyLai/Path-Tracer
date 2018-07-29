@@ -1,6 +1,12 @@
 #include "sphere.hpp"
 #include "ray.hpp"
 
+std::optional<AABB> Sphere::bounding_box() const noexcept
+{
+  const Vec3f offset(radius, radius, radius);
+  return AABB{center - offset, center + offset};
+}
+
 Maybe_hit_t Sphere::intersect_at(const Ray& r, float t_min, float t_max) const
     noexcept
 {

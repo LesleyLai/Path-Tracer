@@ -18,8 +18,10 @@ struct Sphere : Hitable {
   {
   }
 
+  std::optional<AABB> bounding_box() const noexcept override;
+
   /**
-   * Ray-sphere intersection detection
+   * @brief Ray-sphere intersection detection
    * @see Hitable::intersect_at
    */
   Maybe_hit_t intersect_at(const Ray& r, float t_min, float t_max) const

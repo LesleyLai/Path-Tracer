@@ -1,8 +1,10 @@
 #ifndef HITABLE_HPP
 #define HITABLE_HPP
 
-#include "vector.hpp"
 #include <optional>
+
+#include "aabb.hpp"
+#include "vector.hpp"
 
 struct Ray;
 class Material;
@@ -27,6 +29,17 @@ struct Hitable {
   Hitable(Hitable&&) = default;
   Hitable& operator=(Hitable&&) = default;
 
+  /**
+   * @brief Get the bounding box of an object
+   * @return An AABB for objects with bounding_box, nothing otherwise (for
+   * example, infinite plane)
+   */
+  virtual std::optional<AABB> bounding_box() const noexcept = 0;
+
+  /**
+   * @brief Ray-object intersection detection
+   * @return A optional record of intersection information, nothing if not hit
+   */
   virtual Maybe_hit_t intersect_at(const Ray& r, float t_min, float t_max) const
       noexcept = 0;
 };
