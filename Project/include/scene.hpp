@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "bounding_value_hierarchy.hpp"
 #include "camera.hpp"
 #include "hitable.hpp"
 
@@ -20,6 +21,12 @@ public:
    */
   template <typename T, class... Args> void add_object(Args... args) noexcept;
 
+  // Create bounding value hierarchy by the current objects in the scene
+  void create_bvh()
+  {
+    bvh_ = std::make_unique<BVH_node>(std::begin(objects_), std::end(objects_));
+  }
+
   /**
    * @brief Returns the hit record at the closet hit point
    */
@@ -28,6 +35,7 @@ public:
 
 private:
   std::vector<std::unique_ptr<Hitable>> objects_;
+  std::unique_ptr<BVH_node> bvh_ = nullptr;
 };
 
 /**

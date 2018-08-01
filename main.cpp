@@ -48,6 +48,8 @@ void populateScene(Scene& scene)
       }
     }
   }
+
+  scene.create_bvh();
 }
 
 template <typename Duration>

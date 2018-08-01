@@ -65,7 +65,7 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
               const float u = (i + dis(gen)) / width;
               const float v = (j + dis(gen)) / height;
 
-              const auto r = camera.getRay(u, v);
+              const auto r = camera.get_ray(u, v);
               c += trace(scene, r);
             }
             c /= static_cast<float>(sample_per_pixel);
