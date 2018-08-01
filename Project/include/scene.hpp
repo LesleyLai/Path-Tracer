@@ -37,7 +37,7 @@ public:
 
 private:
   std::vector<std::unique_ptr<Hitable>> objects_;
-  std::unique_ptr<BVH_node> bvh_ = nullptr;
+  std::unique_ptr<const BVH_node> bvh_ = nullptr;
 };
 
 /**

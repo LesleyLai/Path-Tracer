@@ -21,13 +21,5 @@ Maybe_hit_t Scene::intersect_at(const Ray& r, float t_min, float t_max) const
     temp_record = *hit;
   }
 
-  //  for (const auto& object : objects_) {
-  //    auto hit = object->intersect_at(r, t_min, closest_so_far);
-  //    if (hit) {
-  //      closest_so_far = hit->t;
-  //      temp_record = *hit;
-  //    }
-  //  }
-
   return temp_record;
 }
