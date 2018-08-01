@@ -1,4 +1,4 @@
-#include "bounding_value_hierarchy.hpp"
+#include "bounding_volume_hierarchy.hpp"
 
 #include <algorithm>
 #include <cassert>

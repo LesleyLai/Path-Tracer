@@ -1,5 +1,5 @@
-#ifndef BOUNDING_VALUE_HIERARCHY_HPP
-#define BOUNDING_VALUE_HIERARCHY_HPP
+#ifndef BOUNDING_VOLUME_HIERARCHY_HPP
+#define BOUNDING_VOLUME_HIERARCHY_HPP
 
 #include <memory>
 #include <vector>
@@ -24,4 +24,4 @@ private:
   AABB box_;
 };
 
-#endif // BOUNDING_VALUE_HIERARCHY_HPP
+#endif // BOUNDING_VOLUME_HIERARCHY_HPP

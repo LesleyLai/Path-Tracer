@@ -1,8 +1,8 @@
 add_library(common
     include/aabb.hpp
     include/angle.hpp
-    include/bounding_value_hierarchy.hpp
-    src/bounding_value_hierarchy.cpp
+    include/bounding_volume_hierarchy.hpp
+    src/bounding_volume_hierarchy.cpp
     src/angle.cpp
     include/image.hpp
     src/image.cpp
