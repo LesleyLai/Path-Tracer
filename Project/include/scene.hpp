@@ -21,10 +21,12 @@ public:
    */
   template <typename T, class... Args> void add_object(Args... args) noexcept;
 
-  // Create bounding value hierarchy by the current objects in the scene
+  /// @brief Create bounding value hierarchy by the objects in the scene
+  /// @note It will move the ownership of objects to BVH
   void create_bvh()
   {
     bvh_ = std::make_unique<BVH_node>(std::begin(objects_), std::end(objects_));
+    objects_.clear();
   }
 
   /**

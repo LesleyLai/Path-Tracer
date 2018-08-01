@@ -2,7 +2,28 @@
 
 #include <algorithm>
 #include <cassert>
+#include <limits>
 #include <random>
+
+// A dummy object that you cannot hit
+namespace {
+struct Never_hitable : Hitable {
+  // Returns a bounding box that do not bound to anything
+  std::optional<AABB> bounding_box() const noexcept override
+  {
+    constexpr auto min = std::numeric_limits<float>::min();
+    constexpr auto max = std::numeric_limits<float>::max();
+
+    return AABB{{max, max, max}, {min, min, min}};
+  }
+
+  Maybe_hit_t intersect_at(const Ray& /*r*/, float /*t_min*/,
+                           float /*t_max*/) const noexcept override
+  {
+    return {};
+  }
+};
+} // anonymous namespace
 
 BVH_node::BVH_node(const Object_iterator& begin,
                    const Object_iterator& end) noexcept
@@ -40,18 +61,19 @@ BVH_node::BVH_node(const Object_iterator& begin,
 
   const auto size = end - begin;
   assert(size > 0);
-  if (size == 1) {
-    left_ = right_ = begin->get();
-  }
-  else if (size == 2) {
-    auto itr = begin;
-    left_ = itr->get();
-    ++itr;
-    right_ = itr->get();
-  }
-  else {
-    left_ = new BVH_node(begin, begin + size / 2);
-    right_ = new BVH_node(begin + size / 2, end);
+
+  switch (size) {
+  case 1:
+    left_ = std::move(*begin);
+    right_ = std::make_unique<Never_hitable>();
+    break;
+  case 2:
+    left_ = std::move(*begin);
+    right_ = std::move(*(begin + 1));
+    break;
+  default:
+    left_ = std::make_unique<BVH_node>(begin, begin + size / 2);
+    right_ = std::make_unique<BVH_node>(begin + size / 2, end);
   }
 
   assert(left_->bounding_box() != std::nullopt &&
