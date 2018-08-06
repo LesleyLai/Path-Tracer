@@ -48,16 +48,19 @@ constexpr std::optional<Vec3f> refract(Vec3f v, Vec3f n,
   return std::nullopt;
 }
 
-Vec3f random_in_unit_circle()
+Vec3f random_in_unit_sphere()
 {
+  // Credit:
+  // https://math.stackexchange.com/questions/87230/picking-random-points-in-the-volume-of-sphere-with-uniform-probability/87238#87238
   thread_local std::mt19937 gen = std::mt19937{std::random_device{}()};
-  thread_local std::uniform_real_distribution<float> dis(-1, 1);
+  thread_local std::uniform_real_distribution<float> uni(-1, 1);
+  thread_local std::normal_distribution<float> normal(0, 1);
 
-  Vec3f p;
-  do {
-    p = Vec3f(dis(gen), dis(gen), dis(gen));
-  } while (p.length_square() >= 1);
-  return p;
+  Vec3f p{normal(gen), normal(gen), normal(gen)};
+  p /= p.length(); // Normalize
+
+  const auto c = std::cbrt(uni(gen));
+  return p * c;
 }
 
 // Reflectivity by Christophe Schlick
@@ -70,7 +73,7 @@ float schlick(float cosine, float ref_idx)
 
 std::optional<Ray> lambertian_scatter(const Hit_record& record)
 {
-  Vec3f target = record.point + record.normal + random_in_unit_circle();
+  Vec3f target = record.point + record.normal + random_in_unit_sphere();
   return Ray{record.point, target - record.point};
 }
 
@@ -79,7 +82,7 @@ std::optional<Ray> metal_scatter(const Ray& ray_in, const Hit_record& record,
 {
   auto incident_dir = ray_in.direction / ray_in.direction.length();
   auto reflected =
-      reflect(incident_dir, record.normal) + fuzzness * random_in_unit_circle();
+      reflect(incident_dir, record.normal) + fuzzness * random_in_unit_sphere();
   if (dot(reflected, record.normal) <= 0) {
     return std::nullopt;
   }
