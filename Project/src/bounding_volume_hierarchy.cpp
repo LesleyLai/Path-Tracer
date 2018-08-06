@@ -8,12 +8,12 @@
 // A dummy object that you cannot hit
 namespace {
 struct Never_hitable : Hitable {
-  // Returns a bounding box that do not bound to anything
   std::optional<AABB> bounding_box() const noexcept override
   {
     constexpr auto min = std::numeric_limits<float>::min();
     constexpr auto max = std::numeric_limits<float>::max();
 
+    // Returns a bounding box that do not bound to anything
     return AABB{{max, max, max}, {min, min, min}};
   }
 

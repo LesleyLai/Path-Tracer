@@ -1,3 +1,8 @@
+/**
+ * @file sphere.hpp
+ * @brief File for sphere, one of the geometric primetives
+ */
+
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 

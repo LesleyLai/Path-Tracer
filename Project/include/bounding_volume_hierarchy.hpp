@@ -19,8 +19,8 @@ public:
       noexcept override;
 
 private:
-  std::unique_ptr<Hitable> left_ = nullptr;
-  std::unique_ptr<Hitable> right_ = nullptr;
+  std::unique_ptr<const Hitable> left_ = nullptr;
+  std::unique_ptr<const Hitable> right_ = nullptr;
   AABB box_;
 };
 

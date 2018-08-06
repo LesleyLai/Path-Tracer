@@ -3,52 +3,69 @@
 #include <cmath>
 #include <functional>
 #include <ostream>
+#include <type_traits>
 
 /**
  * @file vector.hpp
  * @brief Header file for the general fixed sized vector template.
  */
 
+template <typename T, size_t size> struct Vector;
+
+template <typename T, size_t size> struct Vector_base {
+  using size_type = size_t;
+  using value_type = T;
+  using Vector_type = Vector<T, size>;
+
+  constexpr value_type& operator[](size_type i) noexcept
+  {
+    return static_cast<Vector_type*>(this)->elems[i];
+  }
+  constexpr const value_type& operator[](size_type i) const noexcept
+  {
+    return static_cast<const Vector_type* const>(this)->elems[i];
+  }
+
+  /**
+   * @brief Returns square of the length of the vector
+   */
+  constexpr value_type length_square() const noexcept
+  {
+    return dot(*static_cast<const Vector_type*>(this),
+               *static_cast<const Vector_type*>(this));
+  }
+
+  /**
+   * @brief Returns length of the vector
+   */
+  constexpr value_type length() const noexcept
+  {
+    return std::sqrt(length_square());
+  }
+
+protected:
+  // Prevent from outside client from instantiate Vector_base
+  constexpr Vector_base() noexcept = default;
+};
+
 /**
  * @brief Common functions for that all vector spetializations need
  *
  * @related Vector
  */
-#define VECTOR_IMPL_MIXIN(n)                                                   \
-  using size_type = size_t;                                                    \
-  using value_type = T;                                                        \
-                                                                               \
-  constexpr Vector() noexcept : elems{} {}                                     \
-  /* Accessors */                                                              \
-  value_type& operator[](size_type i) noexcept { return elems[i]; }            \
-  constexpr const value_type& operator[](size_type i) const noexcept           \
-  {                                                                            \
-    return elems[i];                                                           \
-  }                                                                            \
-                                                                               \
-  constexpr value_type length_square() const noexcept                          \
-  {                                                                            \
-    return dot(*this, *this);                                                  \
-  }                                                                            \
-  constexpr value_type length() const noexcept                                 \
-  {                                                                            \
-    return std::sqrt(length_square());                                         \
-  }
 
 /**
  * @brief Template of fix-sized vectors
  */
-template <typename T, size_t size> struct Vector {
+template <typename T, size_t size> struct Vector : Vector_base<T, size> {
   T elems[size];
-
-  VECTOR_IMPL_MIXIN(size)
 };
 
 /**
  * @brief 2D Vector specialization
  * @see Vector
  */
-template <typename T> struct Vector<T, 2> {
+template <typename T> struct Vector<T, 2> : Vector_base<T, 2> {
   union {
     struct {
       T x, y;
@@ -56,8 +73,7 @@ template <typename T> struct Vector<T, 2> {
     T elems[2];
   };
 
-  VECTOR_IMPL_MIXIN(2)
-
+  constexpr Vector() noexcept = default;
   constexpr Vector(T xx, T yy) noexcept : x{xx}, y{yy} {}
 };
 
@@ -65,7 +81,7 @@ template <typename T> struct Vector<T, 2> {
  * @brief 3D Vector specialization
  * @see Vector
  */
-template <typename T> struct Vector<T, 3> {
+template <typename T> struct Vector<T, 3> : Vector_base<T, 3> {
   union {
     struct {
       T x, y, z;
@@ -76,8 +92,7 @@ template <typename T> struct Vector<T, 3> {
     T elems[3];
   };
 
-  VECTOR_IMPL_MIXIN(3)
-
+  constexpr Vector() noexcept = default;
   constexpr Vector(T xx, T yy, T zz) noexcept : x{xx}, y{yy}, z{zz} {}
   constexpr Vector(Vector<T, 2> xy, T zz) noexcept : x{xy.x}, y{xy.y}, z{zz} {}
 };
@@ -86,7 +101,7 @@ template <typename T> struct Vector<T, 3> {
  * @brief 4D Vector specialization
  * @see Vector
  */
-template <typename T> struct Vector<T, 4> {
+template <typename T> struct Vector<T, 4> : Vector_base<T, 4> {
   union {
     struct {
       T x, y, z, w;
@@ -100,8 +115,7 @@ template <typename T> struct Vector<T, 4> {
     T elems[4];
   };
 
-  VECTOR_IMPL_MIXIN(4)
-
+  constexpr Vector() noexcept = default;
   constexpr Vector(T xx, T yy, T zz, T ww) noexcept : x{xx}, y{yy}, z{zz}, w{ww}
   {
   }
@@ -110,8 +124,6 @@ template <typename T> struct Vector<T, 4> {
   {
   }
 };
-
-#undef VECTOR_IMPL_MIXIN
 
 namespace detail {
 template <size_t size, typename T, typename Binary_op>

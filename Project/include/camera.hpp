@@ -9,7 +9,7 @@
 class Camera {
 public:
   /**
-   * @brief Camera
+   * @brief Constructor of a camera
    * @param position The position of the camera
    * @param lookat
    * @param up Direction of up
