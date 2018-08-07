@@ -1,7 +1,7 @@
 # Path Tracer
 ## Build Status
 Master Status:
-![Travis Status](https://travis-ci.org/LesleyLai/PathTracer.svg?branch=master)
+[![Travis Status](https://travis-ci.org/LesleyLai/PathTracer.svg?branch=master)](https://travis-ci.org/LesleyLai/PathTracer)
 
 ## Build
 This project requires a C++17 compiler to build. It has been tested with MSVC 2017, gcc 7, and clang 6. To build this project, you need a [CMake](https://cmake.org/) with version at least 3.8.
