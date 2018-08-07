@@ -11,6 +11,6 @@
 Maybe_hit_t Scene::intersect_at(const Ray& r) const noexcept
 {
   assert(aggregate_ != nullptr);
-  return aggregate_->intersect_at(r, 0.00001f,
+  return aggregate_->intersect_at(r, 0.001f,
                                   std::numeric_limits<float>::infinity());
 }

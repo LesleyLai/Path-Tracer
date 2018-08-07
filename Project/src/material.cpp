@@ -36,8 +36,7 @@ constexpr Vec3f reflect(Vec3f v, Vec3f n) noexcept
 }
 
 // Refraction by snell's law
-constexpr std::optional<Vec3f> refract(Vec3f v, Vec3f n,
-                                       float ni_over_nt) noexcept
+std::optional<Vec3f> refract(Vec3f v, Vec3f n, float ni_over_nt) noexcept
 {
   const auto uv = v / v.length();
   float dt = dot(uv, n);

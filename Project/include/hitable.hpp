@@ -16,7 +16,7 @@ struct Hit_record {
   float t{};
   Vec3f point{};  ///< Intersection point
   Vec3f normal{}; ///< Surface normal, need to be construct as a unit vector
-  const Material* material{};
+  const Material* const material{};
 };
 
 using Maybe_hit_t = std::optional<Hit_record>;
