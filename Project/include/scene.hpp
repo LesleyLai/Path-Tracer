@@ -5,7 +5,6 @@
 #include <type_traits>
 #include <vector>
 
-#include "bounding_volume_hierarchy.hpp"
 #include "camera.hpp"
 #include "hitable.hpp"
 
@@ -14,19 +13,13 @@
  */
 class Scene {
 public:
-  Scene() noexcept = default;
-
   /**
-   *  @brief Adds an Hitable object to the scene
+   * @brief Constructs a Scene object
+   * @param aggregate The combination of all objects in the scene
    */
-  template <typename T, class... Args> void add_object(Args... args) noexcept;
-
-  /// @brief Create bounding value hierarchy by the objects in the scene
-  /// @note It will move the ownership of objects to BVH
-  void create_bvh()
+  explicit Scene(std::unique_ptr<Hitable>&& aggregate) noexcept
+      : aggregate_{std::move(aggregate)}
   {
-    bvh_ = std::make_unique<BVH_node>(std::begin(objects_), std::end(objects_));
-    objects_.clear();
   }
 
   /**
@@ -36,24 +29,7 @@ public:
       noexcept;
 
 private:
-  std::vector<std::unique_ptr<Hitable>> objects_;
-  std::unique_ptr<const BVH_node> bvh_ = nullptr;
+  std::unique_ptr<const Hitable> aggregate_ = nullptr;
 };
-
-/**
- * @tparam T The type of Sphere object we want to add to the scene
- * @tparam ...Args Type of the arguments passed to your object constructor
- * @param args The arguments passed to your object constructor
- */
-template <class T, class... Args> void Scene::add_object(Args... args) noexcept
-{
-  if constexpr (std::is_base_of<Hitable, T>::value) {
-    objects_.push_back(std::make_unique<T>(std::forward<Args>(args)...));
-  }
-  else {
-    static_assert(!std::is_same<T, T>::value,
-                  "Unsupported object primitive type");
-  }
-}
 
 #endif // SCENE_HPP

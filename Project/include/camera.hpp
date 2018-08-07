@@ -42,10 +42,10 @@ public:
   }
 
 private:
-  Vec3f origin_;
-  Vec3f lower_left_corner_;
-  Vec3f horizontal_;
-  Vec3f vertical_;
+  Vec3f origin_{};
+  Vec3f lower_left_corner_{};
+  Vec3f horizontal_{};
+  Vec3f vertical_{};
 };
 
 #endif // CAMERA_HPP

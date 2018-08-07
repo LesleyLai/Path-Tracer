@@ -3,24 +3,27 @@
 #include <memory>
 #include <random>
 #include <stdexcept>
+#include <vector>
 
+#include "bounding_volume_hierarchy.hpp"
 #include "image.hpp"
 #include "material.hpp"
 #include "pathtracer.hpp"
 #include "scene.hpp"
 #include "sphere.hpp"
 
-void populateScene(Scene& scene)
+Scene create_scene()
 {
   Material grey{Material::Type::Lambertian, Color(0.5f, 0.5f, 0.5f)};
   Material blue{Material::Type::Lambertian, Color(0.5f, 0.8f, 0.8f)};
   Material bubble{Material::Type::Dielectric, Color(1.f, 1.f, 1.f), 0, 1.1f};
   Material mirror{Material::Type::Metal, Color(0.9f, 0.9f, 0.9f), 0.1f};
 
-  scene.add_object<Sphere>(Vec3f(0, -1000, 0), 1000.f, grey);
-  scene.add_object<Sphere>(Vec3f(1, 2, 0), 1.f, bubble);
-  scene.add_object<Sphere>(Vec3f(-4, 1, 0), 1.f, blue);
-  scene.add_object<Sphere>(Vec3f(4, 1, 0), 1.f, mirror);
+  std::vector<std::unique_ptr<Hitable>> objects;
+  objects.push_back(std::make_unique<Sphere>(Vec3f(0, -1000, 0), 1000.f, grey));
+  objects.push_back(std::make_unique<Sphere>(Vec3f(1, 2, 0), 1.f, bubble));
+  objects.push_back(std::make_unique<Sphere>(Vec3f(-4, 1, 0), 1.f, blue));
+  objects.push_back(std::make_unique<Sphere>(Vec3f(4, 1, 0), 1.f, mirror));
 
   thread_local auto gen = std::mt19937{std::random_device{}()};
   thread_local std::uniform_real_distribution<float> dis(0.0, 1.0);
@@ -36,20 +39,20 @@ void populateScene(Scene& scene)
       const auto albedo = Color(random_color(), random_color(), random_color());
       if (choose_mat < 0.7f) {
         Material mat(Material::Type::Lambertian, albedo);
-        scene.add_object<Sphere>(center, 0.2f, mat);
+        objects.push_back(std::make_unique<Sphere>(center, 0.2f, mat));
       }
       else if (choose_mat < 0.9f) {
         Material mat(Material::Type::Metal, albedo, 0.1f);
-        scene.add_object<Sphere>(center, 0.2f, mat);
+        objects.push_back(std::make_unique<Sphere>(center, 0.2f, mat));
       }
       else {
         Material mat(Material::Type::Dielectric, albedo, 0, 1.5f);
-        scene.add_object<Sphere>(center, 0.2f, mat);
+        objects.push_back(std::make_unique<Sphere>(center, 0.2f, mat));
       }
     }
   }
 
-  scene.create_bvh();
+  return Scene(std::make_unique<BVH_node>(objects.begin(), objects.end()));
 }
 
 template <typename Duration>
@@ -77,9 +80,7 @@ int main() try {
   constexpr int width = 800, height = 600;
   Image image(width, height);
 
-  Scene scene{};
-
-  populateScene(scene);
+  const auto scene = create_scene();
 
   constexpr auto aspect_ratio = static_cast<float>(width) / height;
   Camera camera{Vec3f{3, 4, 1}, Vec3f{2, 0, 0}, Vec3f{0, 1, 0}, 90.0_deg,
