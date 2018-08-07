@@ -2,7 +2,6 @@
 
 #include <future>
 #include <iostream>
-#include <limits>
 #include <memory>
 #include <random>
 
@@ -15,7 +14,6 @@
 
 Color trace(const Scene& scene, const Ray& ray, size_t depth = 0) noexcept
 {
-  constexpr double inf = std::numeric_limits<double>::infinity();
   constexpr size_t max_depth = 100;
 
   // depth exceed some threshold
@@ -23,7 +21,7 @@ Color trace(const Scene& scene, const Ray& ray, size_t depth = 0) noexcept
     return Color{}; // return black
   }
 
-  if (auto hit = scene.intersect_at(ray, 0.0001f, inf)) {
+  if (auto hit = scene.intersect_at(ray)) {
     auto material = hit->material;
     auto ref = material->scatter(ray, *hit);
     if (ref) {
