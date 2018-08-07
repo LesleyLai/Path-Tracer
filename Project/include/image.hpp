@@ -9,14 +9,17 @@
 #include "color.hpp"
 
 struct Unsupported_image_extension : public std::invalid_argument {
-  Unsupported_image_extension(const char* filename)
+  explicit Unsupported_image_extension(const char* filename)
       : std::invalid_argument{filename}
   {
   }
 };
 
 struct Cannot_write_file : public std::runtime_error {
-  Cannot_write_file(const char* filename) : std::runtime_error{filename} {}
+  explicit Cannot_write_file(const char* filename)
+      : std::runtime_error{filename}
+  {
+  }
 };
 
 class Image {

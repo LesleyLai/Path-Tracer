@@ -8,7 +8,7 @@
 #include "vector.hpp"
 
 /**
- * @brief 3d Axis aligned bounding boxes are used for bounding volume
+ * @brief 3D Axis aligned bounding boxes are used for bounding volume
  * hierarchies
  */
 class AABB {

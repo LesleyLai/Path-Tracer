@@ -29,6 +29,8 @@ struct Ray {
   /**
    * @brief Gets the result point after we put the parameter t into the ray
    * function
+   *
+   * @pre t >= 0
    */
   constexpr Vec3f point_at_parameter(float t) const noexcept
   {

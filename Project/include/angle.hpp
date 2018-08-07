@@ -29,8 +29,8 @@ public:
   /// Default constructor
   constexpr Radian() : value_{0} {}
 
-  /// Degree to Radian conversion function
-  constexpr Radian(Degree degree);
+  /// Degree to Radian implicit conversion function
+  constexpr Radian(Degree degree); // NOLINT
 
   /// Construct radian from a number
   constexpr explicit Radian(float value) : value_{value} {}
@@ -55,8 +55,8 @@ class Degree {
 public:
   constexpr Degree() : value_{0} {}
 
-  /// Radian to Degree conversion function
-  constexpr Degree(Radian radian);
+  /// Radian to Degree implicit conversion function
+  constexpr Degree(Radian radian); // NOLINT
 
   /// Constructs degree from a number
   constexpr explicit Degree(float value);
@@ -364,6 +364,6 @@ constexpr Degree operator"" _deg(long double d)
   return Degree(static_cast<float>(d));
 }
 
-/** @}*/
+/** @}*/ // math group
 
 #endif

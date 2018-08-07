@@ -10,8 +10,15 @@
  * @brief Header file for the general fixed sized vector template.
  */
 
+/** \addtogroup math
+ *  @{
+ */
+
 template <typename T, size_t size> struct Vector;
 
+/**
+ * @brief Base class of Vector contains common members for all specialization.
+ */
 template <typename T, size_t size> struct Vector_base {
   using size_type = size_t;
   using value_type = T;
@@ -354,3 +361,5 @@ using Vec3d =
     Vector<double, 3>; ///< @brief 3D double-precision float point vector type
 using Vec4d =
     Vector<double, 4>; ///< @brief 4D double-precision float point vector type
+
+/** @}*/ // math group
