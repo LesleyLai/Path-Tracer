@@ -89,6 +89,15 @@ TEST_CASE("Vectors", "[math]")
     REQUIRE(v.length() == Approx(std::sqrt(14)));
   }
 
+  SECTION("Normalize the vector")
+  {
+    Vec3d v3{5, 0, 0};
+    v3.normalize();
+
+    REQUIRE(v3.x == Approx(1));
+    REQUIRE(v3.length() == Approx(1));
+  }
+
   SECTION("Get a unit vector with the same direction of the original vector")
   {
     const auto u = unit_vector(v);

@@ -45,10 +45,12 @@ template <typename T, size_t size> struct Vector_base {
   /**
    * @brief Returns length of the vector
    */
-  constexpr value_type length() const noexcept
-  {
-    return std::sqrt(length_square());
-  }
+  value_type length() const noexcept { return std::sqrt(length_square()); }
+
+  /**
+   * @brief Normalize the vector
+   */
+  void normalize() noexcept { *static_cast<Vector_type*>(this) /= length(); }
 
 protected:
   // Prevent from outside client from instantiate Vector_base
@@ -198,8 +200,10 @@ constexpr Vector<T, size>& operator*=(Vector<T, size>& lhs, T rhs) noexcept
 template <typename T, size_t size>
 constexpr Vector<T, size>& operator/=(Vector<T, size>& lhs, T rhs) noexcept
 {
+  T t = 1 / rhs;
+
   for (size_t i = 0; i != size; ++i) {
-    lhs[i] /= rhs;
+    lhs[i] *= t;
   }
   return lhs;
 }
