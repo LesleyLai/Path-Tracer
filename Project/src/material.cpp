@@ -56,7 +56,7 @@ Vec3f random_in_unit_sphere()
   thread_local std::normal_distribution<float> normal(0, 1);
 
   Vec3f p{normal(gen), normal(gen), normal(gen)};
-  p.normalize();
+  p = normalize(p);
 
   const auto c = std::cbrt(uni(gen));
   return p * c;

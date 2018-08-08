@@ -23,8 +23,8 @@ public:
     const float half_width = aspect * half_height;
 
     origin_ = position;
-    const auto w = unit_vector(position - lookat);
-    const auto u = unit_vector(cross(up, w));
+    const auto w = normalize(position - lookat);
+    const auto u = normalize(cross(up, w));
     const auto v = cross(w, u);
 
     lower_left_corner_ = origin_ - half_width * u - half_height * v - w;

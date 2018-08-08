@@ -91,16 +91,7 @@ TEST_CASE("Vectors", "[math]")
 
   SECTION("Normalize the vector")
   {
-    Vec3d v3{5, 0, 0};
-    v3.normalize();
-
-    REQUIRE(v3.x == Approx(1));
-    REQUIRE(v3.length() == Approx(1));
-  }
-
-  SECTION("Get a unit vector with the same direction of the original vector")
-  {
-    const auto u = unit_vector(v);
+    const auto u = normalize(v);
     const auto length = v.length();
     REQUIRE(u.x == Approx(v.x / length));
     REQUIRE(u.y == Approx(v.y / length));

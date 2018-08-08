@@ -9,6 +9,7 @@ target_sources(PathTracingTest
     camera_test.cpp
     color_test.cpp
     image_test.cpp
+    point_test.cpp
     vector_test.cpp
     ray_test.cpp
     sphere_test.cpp

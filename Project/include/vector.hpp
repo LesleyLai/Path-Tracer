@@ -22,15 +22,21 @@ template <typename T, size_t size> struct Vector;
 template <typename T, size_t size> struct Vector_base {
   using size_type = size_t;
   using value_type = T;
-  using Vector_type = Vector<T, size>;
+  using Derived = Vector<T, size>;
+
+  Derived& underlying() { return static_cast<Derived&>(*this); }
+  Derived const& underlying() const
+  {
+    return static_cast<Derived const&>(*this);
+  }
 
   constexpr value_type& operator[](size_type i) noexcept
   {
-    return static_cast<Vector_type*>(this)->elems[i];
+    return underlying().elems[i];
   }
   constexpr const value_type& operator[](size_type i) const noexcept
   {
-    return static_cast<const Vector_type* const>(this)->elems[i];
+    return underlying().elems[i];
   }
 
   /**
@@ -38,19 +44,13 @@ template <typename T, size_t size> struct Vector_base {
    */
   constexpr value_type length_square() const noexcept
   {
-    return dot(*static_cast<const Vector_type*>(this),
-               *static_cast<const Vector_type*>(this));
+    return dot(underlying(), underlying());
   }
 
   /**
    * @brief Returns length of the vector
    */
   value_type length() const noexcept { return std::sqrt(length_square()); }
-
-  /**
-   * @brief Normalize the vector
-   */
-  void normalize() noexcept { *static_cast<Vector_type*>(this) /= length(); }
 
 protected:
   // Prevent from outside client from instantiate Vector_base
@@ -269,7 +269,7 @@ constexpr Vector<T, size> operator*(T lhs, const Vector<T, size>& rhs) noexcept
 template <typename T, size_t size>
 constexpr Vector<T, size> operator/(const Vector<T, size>& lhs, T rhs) noexcept
 {
-  return detail::binary_op(lhs, rhs, std::divides<T>());
+  return detail::binary_op(lhs, 1 / rhs, std::multiplies<T>());
 }
 
 /**
@@ -287,8 +287,18 @@ constexpr T dot(const Vector<T, size>& lhs, const Vector<T, size>& rhs) noexcept
 }
 
 /**
+ * @brief Normalizes a vector and returns the result.
+ * @related Vector
+ */
+template <typename T, size_t size>
+constexpr Vector<T, size> normalize(const Vector<T, size>& v) noexcept
+{
+  return v / v.length();
+}
+
+/**
  * @brief Returns the cross product between the specified vectors.
- * @related Vec3
+ * @related Vector
  */
 template <typename T>
 constexpr Vector<T, 3> cross(const Vector<T, 3>& lhs,
@@ -325,16 +335,6 @@ constexpr bool operator!=(const Vector<T, size>& lhs,
 }
 
 /**
- * @brief Get a unit vector point to certain direction.
- * @related Vector
- */
-template <typename T, size_t size>
-constexpr Vector<T, size> unit_vector(const Vector<T, size>& vec) noexcept
-{
-  return vec / vec.length();
-}
-
-/**
  * @brief Outputs a string representive of vector to a stream
  * @related Vector
  */
@@ -342,13 +342,10 @@ template <typename T, size_t size>
 std::ostream& operator<<(std::ostream& os, const Vector<T, size>& v) noexcept
 {
   os << "vec(";
-  for (size_t i = 0, last = size - 1; i != size; ++i) {
-    os << v[i];
-    if (i != last) {
-      os << ',';
-    }
+  for (size_t i = 0, last = size - 1; i != last; ++i) {
+    os << v[i] << ", ";
   }
-  os << ")";
+  os << v[size - 1] << ")";
   return os;
 }
 
