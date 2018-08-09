@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <functional>
+#include <numeric>
 #include <ostream>
 #include <type_traits>
 
@@ -81,6 +82,9 @@ protected:
  * @brief Template of fix-sized vectors
  */
 template <typename T, size_t size> struct Vector : Vector_base<T, size> {
+  using size_type = size_t;
+  using value_type = T;
+
   T elems[size];
 };
 
@@ -89,6 +93,9 @@ template <typename T, size_t size> struct Vector : Vector_base<T, size> {
  * @see Vector
  */
 template <typename T> struct Vector<T, 2> : Vector_base<T, 2> {
+  using size_type = size_t;
+  using value_type = T;
+
   union {
     struct {
       T x, y;
@@ -105,6 +112,9 @@ template <typename T> struct Vector<T, 2> : Vector_base<T, 2> {
  * @see Vector
  */
 template <typename T> struct Vector<T, 3> : Vector_base<T, 3> {
+  using size_type = size_t;
+  using value_type = T;
+
   union {
     struct {
       T x, y, z;
@@ -125,6 +135,9 @@ template <typename T> struct Vector<T, 3> : Vector_base<T, 3> {
  * @see Vector
  */
 template <typename T> struct Vector<T, 4> : Vector_base<T, 4> {
+  using size_type = size_t;
+  using value_type = T;
+
   union {
     struct {
       T x, y, z, w;
@@ -155,9 +168,8 @@ constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs,
                                     Binary_op f) noexcept
 {
   Vector<T, size> result;
-  for (size_t i = 0; i != size; ++i) {
-    result[i] = f(lhs[i], rhs[i]);
-  }
+  std::transform(std::begin(lhs), std::end(lhs), std::begin(rhs),
+                 std::begin(result), f);
   return result;
 }
 
@@ -179,9 +191,8 @@ template <typename T, size_t size>
 constexpr Vector<T, size>& operator+=(Vector<T, size>& lhs,
                                       const Vector<T, size>& rhs) noexcept
 {
-  for (size_t i = 0; i != size; ++i) {
-    lhs[i] += rhs[i];
-  }
+  std::transform(std::begin(lhs), std::end(lhs), std::begin(rhs),
+                 std::begin(lhs), std::plus<T>());
   return lhs;
 }
 
@@ -191,9 +202,8 @@ template <typename T, size_t size>
 constexpr Vector<T, size>& operator-=(Vector<T, size>& lhs,
                                       const Vector<T, size>& rhs) noexcept
 {
-  for (size_t i = 0; i != size; ++i) {
-    lhs[i] -= rhs[i];
-  }
+  std::transform(std::begin(lhs), std::end(lhs), std::begin(rhs),
+                 std::begin(lhs), std::minus<T>());
   return lhs;
 }
 
@@ -290,11 +300,8 @@ constexpr Vector<T, size> operator/(const Vector<T, size>& lhs, T rhs) noexcept
 template <typename T, size_t size>
 constexpr T dot(const Vector<T, size>& lhs, const Vector<T, size>& rhs) noexcept
 {
-  T result = 0;
-  for (size_t i = 0; i != size; ++i) {
-    result += lhs[i] * rhs[i];
-  }
-  return result;
+  return std::inner_product(std::begin(lhs), std::end(lhs), std::begin(rhs),
+                            T{0});
 }
 
 /**
@@ -328,10 +335,7 @@ template <typename T, size_t size>
 constexpr bool operator==(const Vector<T, size>& lhs,
                           const Vector<T, size>& rhs) noexcept
 {
-  for (size_t i = 0; i != size; ++i) {
-    if (lhs[i] != rhs[i]) return false;
-  }
-  return true;
+  return std::equal(std::begin(lhs), std::end(lhs), std::begin(rhs));
 }
 
 /**
