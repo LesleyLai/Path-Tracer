@@ -25,7 +25,7 @@ TEST_CASE("Vectors", "[math]")
   {
     std::stringstream ss;
     ss << v;
-    REQUIRE(ss.str() == "vec(1,2,3)");
+    REQUIRE(ss.str() == "vec(1, 2, 3)");
   }
 
   SECTION("Comparison of Vector")

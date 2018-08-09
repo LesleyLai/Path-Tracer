@@ -87,6 +87,61 @@ template <typename T> struct Point<T, 4> : Point_base<T, 4> {
   }
 };
 
+/**
+ * @brief Determines if two given points are equal.
+ * @related Point
+ */
+template <typename T, size_t size>
+constexpr bool operator==(const Point<T, size>& lhs,
+                          const Point<T, size>& rhs) noexcept
+{
+  for (size_t i = 0; i != size; ++i) {
+    if (lhs[i] != rhs[i]) return false;
+  }
+  return true;
+}
+
+/**
+ * @brief Determines if two given points are not equal.
+ * @related Point
+ */
+template <typename T, size_t size>
+constexpr bool operator!=(const Point<T, size>& lhs,
+                          const Point<T, size>& rhs) noexcept
+{
+  return !(lhs == rhs);
+}
+
+/**
+ * @brief Adds rhs to this point.
+ * @related Point
+ * @related Vector
+ */
+template <typename T, size_t size>
+constexpr Point<T, size>& operator+=(Point<T, size>& lhs,
+                                     const Vector<T, size>& rhs) noexcept
+{
+  for (size_t i = 0; i != size; ++i) {
+    lhs[i] += rhs[i];
+  }
+  return lhs;
+}
+
+/**
+ * @brief Subtracts rhs to this point.
+ * @related Point
+ * @related Vector
+ */
+template <typename T, size_t size>
+constexpr Point<T, size>& operator-=(Point<T, size>& lhs,
+                                     const Vector<T, size>& rhs) noexcept
+{
+  for (size_t i = 0; i != size; ++i) {
+    lhs[i] -= rhs[i];
+  }
+  return lhs;
+}
+
 using Point2f = Point<float, 2>;
 using Point2d = Point<double, 2>;
 using Point3f = Point<float, 3>;
@@ -97,11 +152,33 @@ using Point4d = Point<double, 4>;
 TEST_CASE("Point", "[math]")
 {
   Point3d p{1, 2, 3};
+  Vec3d v{1, 1, 1};
 
   SECTION("Array-style indexing for Point")
   {
     REQUIRE(p[2] == Approx(3));
     ++p[2];
     REQUIRE(p[2] == Approx(4));
+  }
+
+  SECTION("Comparison of Point")
+  {
+    REQUIRE(p == Point3d{1, 2, 3});
+    REQUIRE(p != Point3d{2, 3, 4});
+  }
+
+  SECTION("Unary operations for Point")
+  {
+    SECTION("+=")
+    {
+      p += v;
+      REQUIRE(p == Point3d{2, 3, 4});
+    }
+
+    SECTION("+=")
+    {
+      p -= v;
+      REQUIRE(p == Point3d{0, 1, 2});
+    }
   }
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <ostream>
@@ -51,6 +52,19 @@ template <typename T, size_t size> struct Vector_base {
    * @brief Returns length of the vector
    */
   value_type length() const noexcept { return std::sqrt(length_square()); }
+
+  constexpr T* begin() noexcept { return std::begin(underlying().elems); }
+  constexpr T* end() noexcept { return std::end(underlying().elems); }
+  constexpr const T* begin() const noexcept { return cbegin(); }
+  constexpr const T* end() const noexcept { return cend(); }
+  constexpr const T* cbegin() const noexcept
+  {
+    return std::begin(underlying().elems);
+  }
+  constexpr const T* cend() const noexcept
+  {
+    return std::end(underlying().elems);
+  }
 
 protected:
   // Prevent from outside client from instantiate Vector_base
@@ -148,13 +162,12 @@ constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs,
 }
 
 template <size_t size, typename T, typename Binary_op>
-constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs, const T& rhs,
+constexpr Vector<T, size> binary_op(const Vector<T, size>& lhs, T rhs,
                                     Binary_op f) noexcept
 {
   Vector<T, size> result;
-  for (size_t i = 0; i != size; ++i) {
-    result[i] = f(lhs[i], rhs);
-  }
+  std::transform(std::begin(lhs), std::end(lhs), std::begin(result),
+                 [=](T x) { return f(x, rhs); });
   return result;
 }
 
@@ -189,9 +202,8 @@ constexpr Vector<T, size>& operator-=(Vector<T, size>& lhs,
 template <typename T, size_t size>
 constexpr Vector<T, size>& operator*=(Vector<T, size>& lhs, T rhs) noexcept
 {
-  for (size_t i = 0; i != size; ++i) {
-    lhs[i] *= rhs;
-  }
+  std::transform(std::begin(lhs), std::end(lhs), std::begin(lhs),
+                 [=](T x) { return x * rhs; });
   return lhs;
 }
 
@@ -200,11 +212,11 @@ constexpr Vector<T, size>& operator*=(Vector<T, size>& lhs, T rhs) noexcept
 template <typename T, size_t size>
 constexpr Vector<T, size>& operator/=(Vector<T, size>& lhs, T rhs) noexcept
 {
-  T t = 1 / rhs;
+  T inv = 1 / rhs;
 
-  for (size_t i = 0; i != size; ++i) {
-    lhs[i] *= t;
-  }
+  std::transform(std::begin(lhs), std::end(lhs), std::begin(lhs),
+                 [=](T elem) { return elem * inv; });
+
   return lhs;
 }
 
@@ -214,9 +226,8 @@ template <typename T, size_t size>
 constexpr Vector<T, size> operator-(const Vector<T, size>& vector) noexcept
 {
   Vector<T, size> result;
-  for (size_t i = 0; i != size; ++i) {
-    result[i] = -vector[i];
-  }
+  std::transform(std::begin(vector), std::end(vector), std::begin(result),
+                 std::negate<T>());
   return result;
 }
 
