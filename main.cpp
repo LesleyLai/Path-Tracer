@@ -84,8 +84,7 @@ int main() try {
   const auto scene = create_scene();
 
   constexpr auto aspect_ratio = static_cast<float>(width) / height;
-  Camera camera{Point3f{3, 4, 1}, Point3f{2, 0, 0}, Vec3f{0, 1, 0}, 90.0_deg,
-                aspect_ratio};
+  Camera camera{{3, 4, 1}, {2, 0, 0}, {0, 1, 0}, 90.0_deg, aspect_ratio};
   auto start = std::chrono::system_clock::now();
   path_tracer.run(scene, camera, image, 5);
   auto end = std::chrono::system_clock::now();
