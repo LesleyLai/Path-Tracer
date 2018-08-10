@@ -11,14 +11,14 @@
 
 #include "hitable.hpp"
 #include "material.hpp"
-#include "vector.hpp"
+#include "point.hpp"
 
 struct Sphere : Hitable {
-  Vec3f center;
+  Point3f center{};
   float radius = 1;
   const Material material;
 
-  Sphere(Vec3f center, float radius, Material mat)
+  Sphere(Point3f center, float radius, Material mat)
       : center{center}, radius{radius}, material{mat}
   {
   }

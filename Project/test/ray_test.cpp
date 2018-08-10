@@ -4,13 +4,13 @@
 
 TEST_CASE("Ray", "[geometry]")
 {
-  const Vec3f origin = {1, 1, 1};
+  const Point3f origin = {1, 1, 1};
   const Vec3f direction = {0, 0, 1};
 
   SECTION("Default construct a ray at origin")
   {
     Ray default_ray;
-    REQUIRE(default_ray.origin == Vec3f{0, 0, 0});
+    REQUIRE(default_ray.origin == Point3f{0, 0, 0});
   }
 
   SECTION("Construct a ray with input")

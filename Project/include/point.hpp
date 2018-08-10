@@ -12,7 +12,7 @@ template <typename T, size_t size> class Point;
 template <typename T, size_t size>
 struct Point_base : Vector_like_base<T, size, Point<T, size>> {
 protected:
-  Point_base() = default;
+  constexpr Point_base() = default;
 };
 
 /**

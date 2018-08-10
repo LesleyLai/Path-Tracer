@@ -20,10 +20,11 @@ Scene create_scene()
   Material mirror{Material::Type::Metal, Color(0.9f, 0.9f, 0.9f), 0.1f};
 
   std::vector<std::unique_ptr<Hitable>> objects;
-  objects.push_back(std::make_unique<Sphere>(Vec3f(0, -1000, 0), 1000.f, grey));
-  objects.push_back(std::make_unique<Sphere>(Vec3f(1, 2, 0), 1.f, bubble));
-  objects.push_back(std::make_unique<Sphere>(Vec3f(-4, 1, 0), 1.f, blue));
-  objects.push_back(std::make_unique<Sphere>(Vec3f(4, 1, 0), 1.f, mirror));
+  objects.push_back(
+      std::make_unique<Sphere>(Point3f(0, -1000, 0), 1000.f, grey));
+  objects.push_back(std::make_unique<Sphere>(Point3f(1, 2, 0), 1.f, bubble));
+  objects.push_back(std::make_unique<Sphere>(Point3f(-4, 1, 0), 1.f, blue));
+  objects.push_back(std::make_unique<Sphere>(Point3f(4, 1, 0), 1.f, mirror));
 
   thread_local auto gen = std::mt19937{std::random_device{}()};
   thread_local std::uniform_real_distribution<float> dis(0.0, 1.0);
@@ -32,8 +33,8 @@ Scene create_scene()
 
   for (int i = -11; i < 11; ++i) {
     for (int j = -11; j < 11; ++j) {
-      Vec3f center{i + 0.9f * dis(gen), 0.2f + 0.1f * dis(gen),
-                   j + 0.9f * dis(gen)};
+      const Point3f center{i + 0.9f * dis(gen), 0.2f + 0.1f * dis(gen),
+                           j + 0.9f * dis(gen)};
       auto choose_mat = dis(gen);
 
       const auto albedo = Color(random_color(), random_color(), random_color());
@@ -83,7 +84,7 @@ int main() try {
   const auto scene = create_scene();
 
   constexpr auto aspect_ratio = static_cast<float>(width) / height;
-  Camera camera{Vec3f{3, 4, 1}, Vec3f{2, 0, 0}, Vec3f{0, 1, 0}, 90.0_deg,
+  Camera camera{Point3f{3, 4, 1}, Point3f{2, 0, 0}, Vec3f{0, 1, 0}, 90.0_deg,
                 aspect_ratio};
   auto start = std::chrono::system_clock::now();
   path_tracer.run(scene, camera, image, 5);

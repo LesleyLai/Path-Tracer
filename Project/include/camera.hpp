@@ -2,9 +2,9 @@
 #define CAMERA_HPP
 
 #include "angle.hpp"
+#include "point.hpp"
 #include "ray.hpp"
 #include "vector.hpp"
-#include <iostream>
 
 class Camera {
 public:
@@ -16,7 +16,7 @@ public:
    * @param fov Field of view of the camera
    * @param aspect Aspect ratio of the screen
    */
-  Camera(Vec3f position, Vec3f lookat, Vec3f up, Radian fov,
+  Camera(Point3f position, Point3f lookat, Vec3f up, Radian fov,
          float aspect) noexcept
   {
     const float half_height = std::tan(fov.value() / 2);
@@ -42,8 +42,8 @@ public:
   }
 
 private:
-  Vec3f origin_{};
-  Vec3f lower_left_corner_{};
+  Point3f origin_{};
+  Point3f lower_left_corner_{};
   Vec3f horizontal_{};
   Vec3f vertical_{};
 };

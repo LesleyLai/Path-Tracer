@@ -72,7 +72,7 @@ float schlick(float cosine, float ref_idx)
 
 std::optional<Ray> lambertian_scatter(const Hit_record& record)
 {
-  Vec3f target = record.point + record.normal + random_in_unit_sphere();
+  const auto target = record.point + record.normal + random_in_unit_sphere();
   return Ray{record.point, target - record.point};
 }
 

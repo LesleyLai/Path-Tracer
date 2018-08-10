@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <ostream>
 
+#include "point.hpp"
 #include "ray.hpp"
-#include "vector.hpp"
 
 /**
  * @brief 3D Axis aligned bounding boxes are used for bounding volume
@@ -18,10 +18,10 @@ public:
   /**
    * @brief Construction an AABB from its minimal corner to maximum corner
    */
-  constexpr AABB(Vec3f min, Vec3f max) noexcept : min_{min}, max_{max} {}
+  constexpr AABB(Point3f min, Point3f max) noexcept : min_{min}, max_{max} {}
 
-  constexpr Vec3f min() const { return min_; }
-  constexpr Vec3f max() const { return max_; }
+  constexpr Point3f min() const { return min_; }
+  constexpr Point3f max() const { return max_; }
 
   /**
    * @brief Whether the ray r hit AABB or not
@@ -46,8 +46,8 @@ public:
   }
 
 private:
-  Vec3f min_ = {};
-  Vec3f max_ = {};
+  Point3f min_ = {};
+  Point3f max_ = {};
 };
 
 constexpr bool operator==(const AABB& lhs, const AABB& rhs)
@@ -65,12 +65,12 @@ constexpr bool operator!=(const AABB& lhs, const AABB& rhs)
  */
 constexpr AABB surrounding_box(const AABB box0, const AABB box1)
 {
-  return AABB{Vec3f{std::min(box0.min().x, box1.min().x),
-                    std::min(box0.min().y, box1.min().y),
-                    std::min(box0.min().z, box1.min().z)},
-              Vec3f{std::max(box0.max().x, box1.max().x),
-                    std::max(box0.max().y, box1.max().y),
-                    std::max(box0.max().z, box1.max().z)}};
+  return AABB{Point3f{std::min(box0.min().x, box1.min().x),
+                      std::min(box0.min().y, box1.min().y),
+                      std::min(box0.min().z, box1.min().z)},
+              Point3f{std::max(box0.max().x, box1.max().x),
+                      std::max(box0.max().y, box1.max().y),
+                      std::max(box0.max().z, box1.max().z)}};
 }
 
 #endif // AABB_HPP
