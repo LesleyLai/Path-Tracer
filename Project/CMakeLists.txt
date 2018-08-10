@@ -11,13 +11,14 @@ add_library(common
     include/hitable.hpp
     include/material.hpp
     src/material.cpp
+    include/pathtracer.hpp
+    src/pathtracer.cpp
     include/vector.hpp
     include/ray.hpp
     include/sphere.hpp
     src/sphere.cpp
     include/scene.hpp
-    include/pathtracer.hpp
-    src/pathtracer.cpp
+    include/point.hpp
     src/scene.cpp
     )
 

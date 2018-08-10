@@ -1,6 +1,8 @@
 #ifndef POINT_HPP
 #define POINT_HPP
 
+#include <algorithm>
+
 #include "vector.hpp"
 
 /** \addtogroup math
@@ -11,6 +13,16 @@ template <typename T, size_t size> class Point;
 
 template <typename T, size_t size>
 struct Point_base : Vector_like_base<T, size, Point<T, size>> {
+  /**
+   * @brief Convert this point into a vector with same value
+   */
+  explicit operator Vector<T, size>() const
+  {
+    Vector<T, size> v;
+    std::copy_n(std::begin(*this), size, std::begin(v));
+    return v;
+  }
+
 protected:
   constexpr Point_base() = default;
 };
@@ -101,8 +113,7 @@ constexpr Point<T, size>& operator+=(Point<T, size>& lhs,
 
 /**
  * @brief Subtracts rhs to this point.
- * @related Point
- * @related Vector
+ * @related Point Vector
  */
 template <typename T, size_t size>
 constexpr Point<T, size>& operator-=(Point<T, size>& lhs,
@@ -115,8 +126,7 @@ constexpr Point<T, size>& operator-=(Point<T, size>& lhs,
 
 /**
  * @brief Subtracts two Points creates a Vector.
- * @related Point
- * @related Vector
+ * @related Point Vector
  */
 template <typename T, size_t size>
 constexpr Vector<T, size> operator-(const Point<T, size>& lhs,
@@ -130,8 +140,7 @@ constexpr Vector<T, size> operator-(const Point<T, size>& lhs,
 
 /**
  * @brief Adds a Vector to Point create another Point
- * @related Point
- * @related Vector
+ * @related Point Vector
  */
 template <typename T, size_t size>
 constexpr Point<T, size> operator+(const Point<T, size>& lhs,
@@ -145,8 +154,7 @@ constexpr Point<T, size> operator+(const Point<T, size>& lhs,
 
 /**
  * @brief Adds a Point to Vector create another Point
- * @related Point
- * @related Vector
+ * @related Point Vector
  */
 template <typename T, size_t size>
 constexpr Point<T, size> operator+(const Vector<T, size>& lhs,
@@ -157,8 +165,7 @@ constexpr Point<T, size> operator+(const Vector<T, size>& lhs,
 
 /**
  * @brief Subtracts a Vector to Point create another Point
- * @related Point
- * @related Vector
+ * @related Point Vector
  */
 template <typename T, size_t size>
 constexpr Point<T, size> operator-(const Point<T, size>& lhs,
@@ -168,6 +175,22 @@ constexpr Point<T, size> operator-(const Point<T, size>& lhs,
   std::transform(std::begin(lhs), std::end(lhs), std::begin(rhs),
                  std::begin(result), std::minus<T>());
   return result;
+}
+
+/**
+ * @brief Linearly interpolates between two Points.
+ * @related Point
+ * @note The parameter t is not clamped into [0, 1], so the result may be
+ * outside the range
+ *
+ * When t = 0 returns lhs. When t = 1 returns rhs. When t = 0.5 returns the
+ * point midway between lhs and rhs.
+ */
+template <typename T, size_t size>
+constexpr Point<T, size> lerp(const Point<T, size>& lhs,
+                              const Point<T, size>& rhs, T t) noexcept
+{
+  return lhs + (rhs - lhs) * t;
 }
 
 using Point2f = Point<float, 2>;

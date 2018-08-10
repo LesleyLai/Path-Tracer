@@ -8,6 +8,8 @@ TEST_CASE("Point", "[math]")
   Point3d p2{2, 3, 4};
   Vec3d v{1, 1, 1};
 
+  SECTION("Convert Point into Vector") { REQUIRE(Vec3d(p) == Vec3d{1, 2, 3}); }
+
   SECTION("Array-style indexing for Point")
   {
     REQUIRE(p[2] == Approx(3));
@@ -42,5 +44,10 @@ TEST_CASE("Point", "[math]")
     SECTION("Point - Vector = Point") { REQUIRE(p2 - v == p); }
     SECTION("Vector + Point = Point") { REQUIRE(v + p == p2); }
     SECTION("Point - Point = Vector") { REQUIRE(p2 - p == v); }
+  }
+
+  SECTION("Linear interpolation of two points")
+  {
+    REQUIRE(lerp(p, p2, 0.1) == Point3d{1.1, 2.1, 3.1});
   }
 }
