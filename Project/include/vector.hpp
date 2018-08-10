@@ -19,40 +19,17 @@
 template <typename T, size_t size> struct Vector;
 
 /**
- * @brief Base class of Vector contains common members for all specialization.
+ * @brief Base class for Vector, Point, and all other Vector-like constructs
+ *
+ * @note Vector_like_base require its derived classes to have a
+ * <code>elems</code> public member with type T[]
  */
-template <typename T, size_t size> struct Vector_base {
-  using size_type = size_t;
-  using value_type = T;
-  using Derived = Vector<T, size>;
-
-  Derived& underlying() { return static_cast<Derived&>(*this); }
-  Derived const& underlying() const
-  {
-    return static_cast<Derived const&>(*this);
-  }
-
-  constexpr value_type& operator[](size_type i) noexcept
+template <typename T, size_t size, typename Derived> struct Vector_like_base {
+  constexpr T& operator[](size_t i) noexcept { return underlying().elems[i]; }
+  constexpr const T& operator[](size_t i) const noexcept
   {
     return underlying().elems[i];
   }
-  constexpr const value_type& operator[](size_type i) const noexcept
-  {
-    return underlying().elems[i];
-  }
-
-  /**
-   * @brief Returns square of the length of the vector
-   */
-  constexpr value_type length_square() const noexcept
-  {
-    return dot(underlying(), underlying());
-  }
-
-  /**
-   * @brief Returns length of the vector
-   */
-  value_type length() const noexcept { return std::sqrt(length_square()); }
 
   constexpr T* begin() noexcept { return std::begin(underlying().elems); }
   constexpr T* end() noexcept { return std::end(underlying().elems); }
@@ -68,23 +45,68 @@ template <typename T, size_t size> struct Vector_base {
   }
 
 protected:
+  constexpr Vector_like_base() noexcept = default;
+
+  Derived& underlying() { return static_cast<Derived&>(*this); }
+  Derived const& underlying() const
+  {
+    return static_cast<Derived const&>(*this);
+  }
+};
+
+/**
+ * @brief Determines if two given vector-like objects are equal.
+ * @related Vector
+ */
+template <typename T, size_t size, typename Derived>
+constexpr bool
+operator==(const Vector_like_base<T, size, Derived>& lhs,
+           const Vector_like_base<T, size, Derived>& rhs) noexcept
+{
+  return std::equal(std::begin(lhs), std::end(lhs), std::begin(rhs));
+}
+
+/**
+ * @brief Determines if two given vectors-like objects are not equal.
+ * @related Vector
+ */
+template <typename T, size_t size, typename Derived>
+constexpr bool
+operator!=(const Vector_like_base<T, size, Derived>& lhs,
+           const Vector_like_base<T, size, Derived>& rhs) noexcept
+{
+  return !(lhs == rhs);
+}
+
+/**
+ * @brief Base class of Vector contains common members for all specialization.
+ */
+template <typename T, size_t size>
+struct Vector_base : Vector_like_base<T, size, Vector<T, size>> {
+  using Base = Vector_like_base<T, size, Vector<T, size>>;
+
+  /**
+   * @brief Returns length of the vector
+   */
+  T length() const noexcept { return std::sqrt(length_square()); }
+
+  /**
+   * @brief Returns square of the length of the vector
+   */
+  constexpr T length_square() const noexcept
+  {
+    return dot(Base::underlying(), Base::underlying());
+  }
+
+protected:
   // Prevent from outside client from instantiate Vector_base
   constexpr Vector_base() noexcept = default;
 };
 
 /**
- * @brief Common functions for that all vector spetializations need
- *
- * @related Vector
- */
-
-/**
  * @brief Template of fix-sized vectors
  */
 template <typename T, size_t size> struct Vector : Vector_base<T, size> {
-  using size_type = size_t;
-  using value_type = T;
-
   T elems[size];
 };
 
@@ -93,9 +115,6 @@ template <typename T, size_t size> struct Vector : Vector_base<T, size> {
  * @see Vector
  */
 template <typename T> struct Vector<T, 2> : Vector_base<T, 2> {
-  using size_type = size_t;
-  using value_type = T;
-
   union {
     struct {
       T x, y;
@@ -112,9 +131,6 @@ template <typename T> struct Vector<T, 2> : Vector_base<T, 2> {
  * @see Vector
  */
 template <typename T> struct Vector<T, 3> : Vector_base<T, 3> {
-  using size_type = size_t;
-  using value_type = T;
-
   union {
     struct {
       T x, y, z;
@@ -135,9 +151,6 @@ template <typename T> struct Vector<T, 3> : Vector_base<T, 3> {
  * @see Vector
  */
 template <typename T> struct Vector<T, 4> : Vector_base<T, 4> {
-  using size_type = size_t;
-  using value_type = T;
-
   union {
     struct {
       T x, y, z, w;
@@ -325,28 +338,6 @@ constexpr Vector<T, 3> cross(const Vector<T, 3>& lhs,
   return Vector<T, 3>{lhs.y * rhs.z - lhs.z * rhs.y,
                       lhs.z * rhs.x - lhs.x * rhs.z,
                       lhs.x * rhs.y - lhs.y * rhs.x};
-}
-
-/**
- * @brief Determines if two given vectors are equal.
- * @related Vector
- */
-template <typename T, size_t size>
-constexpr bool operator==(const Vector<T, size>& lhs,
-                          const Vector<T, size>& rhs) noexcept
-{
-  return std::equal(std::begin(lhs), std::end(lhs), std::begin(rhs));
-}
-
-/**
- * @brief Determines if two given vectors are not equal.
- * @related Vector
- */
-template <typename T, size_t size>
-constexpr bool operator!=(const Vector<T, size>& lhs,
-                          const Vector<T, size>& rhs) noexcept
-{
-  return !(lhs == rhs);
 }
 
 /**
