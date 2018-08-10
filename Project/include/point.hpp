@@ -19,7 +19,7 @@ struct Point_base : Vector_like_base<T, size, Point<T, size>> {
   explicit operator Vector<T, size>() const
   {
     Vector<T, size> v;
-    std::copy_n(std::begin(*this), size, std::begin(v));
+    std::copy(std::begin(*this), std::end(*this), std::begin(v));
     return v;
   }
 

@@ -49,26 +49,23 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
   std::vector<std::future<PixelData>> results;
   for (size_t j = 0; j < height; ++j) {
     for (size_t i = 0; i < width; ++i) {
-      results.push_back(
-          std::async(std::launch::async, [i, j, sample_per_pixel, width, height,
-                                          &scene, &camera] {
-            Color c;
+      results.push_back(std::async(std::launch::async, [i, j, sample_per_pixel,
+                                                        width, height, &scene,
+                                                        &camera] {
+        Color c;
+        thread_local std::mt19937 gen = std::mt19937{std::random_device{}()};
+        std::uniform_real_distribution<float> dis(0.0, 1.0);
 
-            thread_local std::mt19937 gen = std::mt19937{
-                std::random_device{}()}; // Standard mersenne_twister_engine
-                                         // seeded with rd()
-            std::uniform_real_distribution<float> dis(0.0, 1.0);
+        for (size_t sample = 0; sample < sample_per_pixel; ++sample) {
+          const float u = (i + dis(gen)) / width;
+          const float v = (j + dis(gen)) / height;
 
-            for (size_t sample = 0; sample < sample_per_pixel; ++sample) {
-              const float u = (i + dis(gen)) / width;
-              const float v = (j + dis(gen)) / height;
-
-              const auto r = camera.get_ray(u, v);
-              c += trace(scene, r);
-            }
-            c /= static_cast<float>(sample_per_pixel);
-            return PixelData{c, i, j};
-          }));
+          const auto r = camera.get_ray(u, v);
+          c += trace(scene, r);
+        }
+        c /= static_cast<float>(sample_per_pixel);
+        return PixelData{c, i, j};
+      }));
     }
 
     for (auto& result : results) {
