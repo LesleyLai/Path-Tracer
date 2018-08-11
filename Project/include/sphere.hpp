@@ -16,10 +16,10 @@
 struct Sphere : Hitable {
   Point3f center{};
   float radius = 1;
-  const Material material;
+  const Material* const material;
 
-  Sphere(Point3f center, float radius, Material mat)
-      : center{center}, radius{radius}, material{mat}
+  Sphere(Point3f center, float radius, const Material& mat)
+      : center{center}, radius{radius}, material{&mat}
   {
   }
 

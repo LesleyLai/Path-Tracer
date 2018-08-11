@@ -12,14 +12,18 @@
 #include "scene.hpp"
 #include "sphere.hpp"
 
+namespace {
+const Lambertian grey{Color(0.5f, 0.5f, 0.5f)};
+const Lambertian blue{Color(0.5f, 0.8f, 0.8f)};
+const Emission bubble{Color(1.f, 1.f, 1.f)};
+const Metal mirror{Color(0.9f, 0.9f, 0.9f), 0.1f};
+} // namespace
+
 Scene create_scene()
 {
-  Material grey{Material::Type::Lambertian, Color(0.5f, 0.5f, 0.5f)};
-  Material blue{Material::Type::Lambertian, Color(0.5f, 0.8f, 0.8f)};
-  Material bubble{Material::Type::Dielectric, Color(1.f, 1.f, 1.f), 0, 1.1f};
-  Material mirror{Material::Type::Metal, Color(0.9f, 0.9f, 0.9f), 0.1f};
-
   std::vector<std::unique_ptr<Hitable>> objects;
+  std::vector<std::unique_ptr<Material>> materials;
+
   objects.push_back(
       std::make_unique<Sphere>(Point3f(0, -1000, 0), 1000.f, grey));
   objects.push_back(std::make_unique<Sphere>(Point3f(1, 2, 0), 1.f, bubble));
@@ -39,21 +43,25 @@ Scene create_scene()
 
       const auto albedo = Color(random_color(), random_color(), random_color());
       if (choose_mat < 0.7f) {
-        Material mat(Material::Type::Lambertian, albedo);
-        objects.push_back(std::make_unique<Sphere>(center, 0.2f, mat));
+        materials.push_back(std::make_unique<Lambertian>(albedo));
+        objects.push_back(
+            std::make_unique<Sphere>(center, 0.2f, *materials.back()));
       }
       else if (choose_mat < 0.9f) {
-        Material mat(Material::Type::Metal, albedo, 0.1f);
-        objects.push_back(std::make_unique<Sphere>(center, 0.2f, mat));
+        materials.push_back(std::make_unique<Metal>(albedo, 0.1f));
+        objects.push_back(
+            std::make_unique<Sphere>(center, 0.2f, *materials.back()));
       }
       else {
-        Material mat(Material::Type::Dielectric, albedo, 0, 1.5f);
-        objects.push_back(std::make_unique<Sphere>(center, 0.2f, mat));
+        materials.push_back(std::make_unique<Dielectric>(albedo, 0.f, 1.5f));
+        objects.push_back(
+            std::make_unique<Sphere>(center, 0.2f, *materials.back()));
       }
     }
   }
 
-  return Scene(std::make_unique<BVH_node>(objects.begin(), objects.end()));
+  return Scene(std::make_unique<BVH_node>(objects.begin(), objects.end()),
+               std::move(materials));
 }
 
 template <typename Duration>

@@ -3,8 +3,7 @@
 #include <catch.hpp>
 #include <limits>
 
-constexpr Material dummy_mat{Material::Type::Lambertian,
-                             Color(0.5f, 0.5f, 0.5f)};
+static const Lambertian dummy_mat{Color(0.5f, 0.5f, 0.5f)};
 constexpr float inf = std::numeric_limits<float>::infinity();
 
 TEST_CASE("AABBs for sphere", "[geometry] [AABB]")

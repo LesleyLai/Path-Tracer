@@ -7,6 +7,7 @@
 
 #include "camera.hpp"
 #include "hitable.hpp"
+#include "material.hpp"
 
 /**
  * @brief The Scene class represent the scene to be rendered by Path tracer
@@ -16,9 +17,11 @@ public:
   /**
    * @brief Constructs a Scene object
    * @param aggregate The combination of all objects in the scene
+   * @param materials Ownership of all materials used for the scene
    */
-  explicit Scene(std::unique_ptr<Hitable>&& aggregate) noexcept
-      : aggregate_{std::move(aggregate)}
+  Scene(std::unique_ptr<Hitable>&& aggregate,
+        std::vector<std::unique_ptr<Material>>&& materials) noexcept
+      : aggregate_{std::move(aggregate)}, materials_{std::move(materials)}
   {
   }
 
@@ -29,6 +32,7 @@ public:
 
 private:
   std::unique_ptr<const Hitable> aggregate_ = nullptr;
+  std::vector<std::unique_ptr<Material>> materials_;
 };
 
 #endif // SCENE_HPP

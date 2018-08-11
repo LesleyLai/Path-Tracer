@@ -29,7 +29,7 @@ Maybe_hit_t Sphere::intersect_at(const Ray& r, float t_min, float t_max) const
     const auto point = r.point_at_parameter(t);
     const auto normal = (point - center) / radius;
 
-    Hit_record record{t, point, normal, &material};
+    Hit_record record{t, point, normal, material};
     return std::optional<Hit_record>{std::in_place, record};
   };
 

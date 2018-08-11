@@ -24,15 +24,15 @@ Color trace(const Scene& scene, const Ray& ray, size_t depth = 0) noexcept
   if (auto hit = scene.intersect_at(ray)) {
     auto material = hit->material;
     auto ref = material->scatter(ray, *hit);
+    const auto emitted = material->emitted();
     if (ref) {
-      return material->albedo() * trace(scene, *ref, depth + 1);
+      return emitted + material->albedo() * trace(scene, *ref, depth + 1);
     }
-    return Color{};
+    return emitted;
   }
 
-  const auto unit_direction = ray.direction / ray.direction.length();
-  const auto t = 0.5f * (unit_direction.y + 1);
-  return (1.f - t) * Color{1, 1, 1} + t * Color(0.5f, 0.7f, 1);
+  // Returns black if ray does not hit any object
+  return Color{};
 }
 
 struct PixelData {
