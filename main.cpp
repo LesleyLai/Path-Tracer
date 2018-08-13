@@ -14,8 +14,10 @@
 #include "sphere.hpp"
 
 namespace {
-const Lambertian grey{Color(0.5f, 0.5f, 0.5f)};
-const Emission light{Color(4.f, 4.f, 4.f)};
+const Lambertian red{Color(0.65f, 0.05f, 0.05f)};
+const Lambertian white{Color(0.73f, 0.73f, 0.73f)};
+const Lambertian green{Color(0.12f, 0.45f, 0.15f)};
+const Emission light{Color(15, 15, 15)};
 } // namespace
 
 Scene create_scene()
@@ -23,12 +25,23 @@ Scene create_scene()
   std::vector<std::unique_ptr<Hitable>> objects;
   std::vector<std::unique_ptr<Material>> materials;
 
+  objects.push_back(std::make_unique<Rect_YZ>(Point2f(0, 0), Point2f(555, 555),
+                                              555, green,
+                                              Normal_Direction::Negetive));
   objects.push_back(
-      std::make_unique<Sphere>(Point3f(0, -1000, 0), 1000.f, grey));
-  objects.push_back(std::make_unique<Sphere>(Point3f(0, 2, 0), 2, grey));
-  objects.push_back(std::make_unique<Sphere>(Point3f(0, 7, 0), 2, light));
+      std::make_unique<Rect_YZ>(Point2f(0, 0), Point2f(555, 555), 0, red));
+
+  objects.push_back(std::make_unique<Rect_XZ>(Point2f(213, 227),
+                                              Point2f(343, 332), 554, light));
+  objects.push_back(std::make_unique<Rect_XZ>(Point2f(0, 0), Point2f(555, 555),
+                                              555, white,
+                                              Normal_Direction::Negetive));
   objects.push_back(
-      std::make_unique<Rect_XY>(Point2f(1, 3), Point2f(3, 5), -2, light));
+      std::make_unique<Rect_XZ>(Point2f(0, 0), Point2f(555, 555), 0, white));
+
+  objects.push_back(std::make_unique<Rect_XY>(Point2f(0, 0), Point2f(555, 555),
+                                              555, white,
+                                              Normal_Direction::Negetive));
 
   return Scene(std::make_unique<BVH_node>(objects.begin(), objects.end()),
                std::move(materials));
@@ -59,10 +72,11 @@ int main() try {
   constexpr int width = 800, height = 600;
   Image image(width, height);
 
+  constexpr auto aspect_ratio = static_cast<float>(width) / height;
+  Camera camera{
+      {278, 278, -800}, {278, 278, 0}, {0, 1, 0}, 40.0_deg, aspect_ratio};
   const auto scene = create_scene();
 
-  constexpr auto aspect_ratio = static_cast<float>(width) / height;
-  Camera camera{{13, 2, 3}, {0, 0, 0}, {0, 1, 0}, 45.0_deg, aspect_ratio};
   auto start = std::chrono::system_clock::now();
   path_tracer.run(scene, camera, image, 50);
   auto end = std::chrono::system_clock::now();
