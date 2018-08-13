@@ -1,5 +1,7 @@
-#include "sphere.hpp"
+#include <utility>
+
 #include "ray.hpp"
+#include "sphere.hpp"
 
 std::optional<AABB> Sphere::bounding_box() const noexcept
 {

@@ -16,10 +16,9 @@
 struct Sphere : Hitable {
   Point3f center{};
   float radius = 1;
-  const Material* const material;
 
   Sphere(Point3f center, float radius, const Material& mat)
-      : center{center}, radius{radius}, material{&mat}
+      : material{&mat}, center{center}, radius{radius}
   {
   }
 
@@ -31,6 +30,8 @@ struct Sphere : Hitable {
    */
   Maybe_hit_t intersect_at(const Ray& r, float t_min, float t_max) const
       noexcept override;
+
+  const Material* const material;
 };
 
 #endif // SPHERE_HPP

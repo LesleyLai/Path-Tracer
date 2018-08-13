@@ -1,6 +1,8 @@
 add_library(common
     include/aabb.hpp
     include/angle.hpp
+    include/axis_aligned_rect.hpp
+    src/axis_aligned_rect.cpp
     include/bounding_volume_hierarchy.hpp
     src/bounding_volume_hierarchy.cpp
     src/angle.cpp
