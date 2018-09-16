@@ -17,7 +17,8 @@ target_sources(PathTracingTest
     main.cpp
     )
 
-target_link_libraries(PathTracingTest common catch2)
+find_package(Catch2 CONFIG REQUIRED)
+target_link_libraries(PathTracingTest common Catch2::Catch2)
 
 add_test(NAME PathTracingTest COMMAND PathTracingTest)
 

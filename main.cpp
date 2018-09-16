@@ -78,7 +78,7 @@ int main() try {
   const auto scene = create_scene();
 
   auto start = std::chrono::system_clock::now();
-  path_tracer.run(scene, camera, image, 50);
+  path_tracer.run(scene, camera, image, 5);
   auto end = std::chrono::system_clock::now();
 
   std::cout << "elapsed time: ";
