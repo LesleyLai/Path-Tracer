@@ -1,4 +1,4 @@
-# Path Tracer
+# Bolder Render Engine
 ## Build Status
 Master Status:
 Travis: [![Travis Build Status](https://travis-ci.org/LesleyLai/PathTracer.svg?branch=master)](https://travis-ci.org/LesleyLai/PathTracer)
