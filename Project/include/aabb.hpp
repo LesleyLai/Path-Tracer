@@ -2,7 +2,6 @@
 #define AABB_HPP
 
 #include <algorithm>
-#include <cassert>
 #include <ostream>
 
 #include "point.hpp"
@@ -19,12 +18,7 @@ public:
   /**
    * @brief Construction an AABB from its minimal corner to maximum corner
    */
-  constexpr AABB(Point3f min, Point3f max) noexcept : min_{min}, max_{max}
-  {
-    assert(min.x <= max.x);
-    assert(min.y <= max.y);
-    assert(min.z <= max.z);
-  }
+  constexpr AABB(Point3f min, Point3f max) noexcept : min_{min}, max_{max} {}
 
   constexpr Point3f min() const { return min_; }
   constexpr Point3f max() const { return max_; }

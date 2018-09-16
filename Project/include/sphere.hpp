@@ -18,7 +18,7 @@ struct Sphere : Hitable {
   float radius = 1;
 
   Sphere(Point3f center, float radius, const Material& mat)
-      : material{&mat}, center{center}, radius{radius}
+      : center{center}, radius{radius}, material{&mat}
   {
   }
 

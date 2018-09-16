@@ -36,9 +36,9 @@ Color trace(const Scene& scene, const Ray& ray, size_t depth = 0) noexcept
 }
 
 struct PixelData {
-  Color c;
   size_t x{};
   size_t y{};
+  Color c;
 };
 
 void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
@@ -64,13 +64,13 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
           c += trace(scene, r);
         }
         c /= static_cast<float>(sample_per_pixel);
-        return PixelData{c, i, j};
+        return PixelData{i, j, c};
       }));
     }
 
     for (auto& result : results) {
       result.wait();
-      auto [color, i, j] = result.get();
+      auto [i, j, color] = result.get();
       image.color_at(i, j) = color;
     }
     results.clear();
