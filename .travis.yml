@@ -36,6 +36,12 @@ matrix:
 script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - git clone https://github.com/Microsoft/vcpkg.git
+  - cd vcpkg
+  - ./bootstrap-vcpkg.sh
+  - ./vcpkg integrate install
+  - ./vcpkg install catch2
+  - cd ..
+  - cmake -DCMAKE_TOOLCHAIN_FILE=vcpkg\scripts\buildsystems\vcpkg.cmake ..
   - make
   - if [ "${BUILD_ONLY}" != "1" ]; then ctest --verbose; fi
