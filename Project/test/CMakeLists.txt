@@ -20,6 +20,6 @@ target_sources("${PROJECT_NAME}Test"
 find_package(Catch2 CONFIG REQUIRED)
 target_link_libraries("${PROJECT_NAME}Test" common Catch2::Catch2)
 
-add_test(NAME "${PROJECT_NAME}Test" COMMAND PathTracingTest)
+add_test(NAME "${PROJECT_NAME}Test" COMMAND "${PROJECT_NAME}Test")
 
 enable_testing()
