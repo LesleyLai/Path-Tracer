@@ -36,7 +36,7 @@ before_build:
 
 # build with MSBuild
 build:
-  project: Build\PathTracing.sln   # path to Visual Studio solution or project
+  project: Build\BolderRenderEngine.sln   # path to Visual Studio solution or project
   parallel: true                        # enable MSBuild parallel builds
   verbosity: normal                     # MSBuild verbosity level {quiet|minimal|normal|detailed}
 
