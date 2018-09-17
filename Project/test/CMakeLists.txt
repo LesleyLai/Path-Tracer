@@ -1,8 +1,8 @@
 include(CTest)
 
-add_executable (PathTracingTest "")
+add_executable ("${PROJECT_NAME}Test" "")
 
-target_sources(PathTracingTest
+target_sources("${PROJECT_NAME}Test"
     PRIVATE
     aabb_test.cpp
     angle_test.cpp
@@ -18,8 +18,8 @@ target_sources(PathTracingTest
     )
 
 find_package(Catch2 CONFIG REQUIRED)
-target_link_libraries(PathTracingTest common Catch2::Catch2)
+target_link_libraries("${PROJECT_NAME}Test" common Catch2::Catch2)
 
-add_test(NAME PathTracingTest COMMAND PathTracingTest)
+add_test(NAME "${PROJECT_NAME}Test" COMMAND PathTracingTest)
 
 enable_testing()
