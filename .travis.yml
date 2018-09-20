@@ -42,6 +42,6 @@ script:
   - ./vcpkg integrate install
   - ./vcpkg install catch2
   - cd ..
-  - cmake -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake ..
+  - cmake .. -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
   - make
   - if [ "${BUILD_ONLY}" != "1" ]; then ctest --verbose; fi
