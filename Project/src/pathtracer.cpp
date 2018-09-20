@@ -41,8 +41,11 @@ struct PixelData {
   Color c;
 };
 
+constexpr size_t tile_size = 32;
 struct Tile {
 public:
+  Tile() = default;
+
   Tile(size_t startX, size_t startY, size_t width, size_t height)
       : startX_{startX}, startY_{startY}, width_{width}, height_{height}
   {
@@ -72,10 +75,10 @@ public:
   size_t startY() const { return startY_; }
 
 private:
-  size_t startX_;
-  size_t startY_;
-  size_t width_;
-  size_t height_;
+  size_t startX_ = 0;
+  size_t startY_ = 0;
+  size_t width_ = 0;
+  size_t height_ = 0;
   std::vector<Color> data_;
 };
 
@@ -85,8 +88,6 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
   const auto width = image.width(), height = image.height();
 
   std::vector<std::future<Tile>> results;
-
-  constexpr size_t tile_size = 32;
 
   for (size_t y = 0; y < height; y += tile_size) {
     for (size_t x = 0; x < width; x += tile_size) {
