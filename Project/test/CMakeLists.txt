@@ -1,9 +1,6 @@
 include(CTest)
 
-add_executable ("${PROJECT_NAME}Test")
-
-target_sources("${PROJECT_NAME}Test"
-    PRIVATE
+add_executable ("${PROJECT_NAME}Test"
     aabb_test.cpp
     angle_test.cpp
     camera_test.cpp
@@ -14,8 +11,7 @@ target_sources("${PROJECT_NAME}Test"
     ray_test.cpp
     sphere_test.cpp
     scene_test.cpp
-    main.cpp
-    )
+    main.cpp)
 
 find_package(Catch2 CONFIG REQUIRED)
 target_link_libraries("${PROJECT_NAME}Test" common Catch2::Catch2)
