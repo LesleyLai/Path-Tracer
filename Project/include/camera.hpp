@@ -6,6 +6,14 @@
 #include "ray.hpp"
 #include "vector.hpp"
 
+/**
+ * @brief The Camera_sample struct hold all the sample value for a camera to
+ * generate a ray
+ */
+struct Camera_sample {
+  Point2f film_pos;
+};
+
 class Camera {
 public:
   /**
@@ -35,8 +43,10 @@ public:
   /**
    * @brief Generate a ray by uv coodinate
    */
-  Ray get_ray(float u, float v) const noexcept
+  Ray get_ray(Camera_sample sample) const noexcept
   {
+    const auto u = sample.film_pos.x;
+    const auto v = sample.film_pos.y;
     return Ray{origin_,
                lower_left_corner_ + u * horizontal_ + v * vertical_ - origin_};
   }
