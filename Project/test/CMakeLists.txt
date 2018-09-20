@@ -1,6 +1,6 @@
 include(CTest)
 
-add_executable ("${PROJECT_NAME}Test" "")
+add_executable ("${PROJECT_NAME}Test")
 
 target_sources("${PROJECT_NAME}Test"
     PRIVATE
