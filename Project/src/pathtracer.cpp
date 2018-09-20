@@ -41,39 +41,95 @@ struct PixelData {
   Color c;
 };
 
+struct Tile {
+public:
+  Tile(size_t startX, size_t startY, size_t width, size_t height)
+      : startX_{startX}, startY_{startY}, width_{width}, height_{height}
+  {
+    data_.resize(width_ * height_);
+  }
+
+  Color at(size_t i, size_t j) const
+  {
+    assert(i < width_);
+    assert(j < height_);
+    return data_[j * width_ + i];
+  }
+
+  Color& at(size_t i, size_t j)
+  {
+    assert(i < width_);
+    assert(j < height_);
+    return data_[j * width_ + i];
+  }
+
+  size_t height() const { return height_; }
+
+  size_t width() const { return width_; }
+
+  size_t startX() const { return startX_; }
+
+  size_t startY() const { return startY_; }
+
+private:
+  size_t startX_;
+  size_t startY_;
+  size_t width_;
+  size_t height_;
+  std::vector<Color> data_;
+};
+
 void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
                       size_t sample_per_pixel)
 {
   const auto width = image.width(), height = image.height();
 
-  std::vector<std::future<PixelData>> results;
-  for (size_t j = 0; j < height; ++j) {
-    for (size_t i = 0; i < width; ++i) {
-      results.push_back(std::async(std::launch::async, [i, j, sample_per_pixel,
-                                                        width, height, &scene,
-                                                        &camera] {
-        Color c;
-        thread_local std::mt19937 gen = std::mt19937{std::random_device{}()};
-        std::uniform_real_distribution<float> dis(0.0, 1.0);
+  std::vector<std::future<Tile>> results;
 
-        for (size_t sample = 0; sample < sample_per_pixel; ++sample) {
-          const float u = (i + dis(gen)) / width;
-          const float v = (j + dis(gen)) / height;
+  constexpr size_t tile_size = 32;
 
-          const auto r = camera.get_ray(Camera_sample{{u, v}});
-          c += trace(scene, r);
-        }
-        c /= static_cast<float>(sample_per_pixel);
-        return PixelData{i, j, c};
-      }));
+  for (size_t y = 0; y < height; y += tile_size) {
+    for (size_t x = 0; x < width; x += tile_size) {
+      results.push_back(
+          std::async(std::launch::async, [x, y, sample_per_pixel, width, height,
+                                          &scene, &camera] {
+            const size_t end_x = std::min(x + tile_size, width);
+            const size_t end_y = std::min(y + tile_size, height);
+            assert(x < end_x && y < end_y);
+            Tile tile{x, y, end_x - x, end_y - y};
+
+            for (int j = 0; j < tile.height(); ++j) {
+              for (int i = 0; i < tile.width(); ++i) {
+
+                Color c;
+                thread_local std::mt19937 gen =
+                    std::mt19937{std::random_device{}()};
+                std::uniform_real_distribution<float> dis(0.0, 1.0);
+                for (size_t sample = 0; sample < sample_per_pixel; ++sample) {
+                  const float u = (x + i + dis(gen)) / width;
+                  const float v = (y + j + dis(gen)) / height;
+
+                  const auto r = camera.get_ray(Camera_sample{{u, v}});
+                  c += trace(scene, r);
+                }
+                c /= static_cast<float>(sample_per_pixel);
+                tile.at(i, j) = c;
+              }
+            }
+
+            return tile;
+          }));
     }
+  }
 
-    for (auto& result : results) {
-      result.wait();
-      auto [i, j, color] = result.get();
-      image.color_at(i, j) = color;
+  for (auto& result : results) {
+    result.wait();
+    const auto tile = result.get();
+
+    for (int j = 0; j < tile.height(); ++j) {
+      for (size_t i = 0; i < tile.width(); ++i) {
+        image.color_at(tile.startX() + i, tile.startY() + j) = tile.at(i, j);
+      }
     }
-    results.clear();
-    std::cout << (j / static_cast<double>(height) * 100) << "%\n" << std::flush;
   }
 }
