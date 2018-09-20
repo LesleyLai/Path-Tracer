@@ -99,8 +99,8 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
             assert(x < end_x && y < end_y);
             Tile tile{x, y, end_x - x, end_y - y};
 
-            for (int j = 0; j < tile.height(); ++j) {
-              for (int i = 0; i < tile.width(); ++i) {
+            for (size_t j = 0; j < tile.height(); ++j) {
+              for (size_t i = 0; i < tile.width(); ++i) {
 
                 Color c;
                 thread_local std::mt19937 gen =
@@ -127,7 +127,7 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
     result.wait();
     const auto tile = result.get();
 
-    for (int j = 0; j < tile.height(); ++j) {
+    for (size_t j = 0; j < tile.height(); ++j) {
       for (size_t i = 0; i < tile.width(); ++i) {
         image.color_at(tile.startX() + i, tile.startY() + j) = tile.at(i, j);
       }

@@ -1,9 +1,11 @@
 #include <chrono>
-#include <iostream>
+#include <cstdio>
 #include <memory>
 #include <random>
 #include <stdexcept>
 #include <vector>
+
+#include <fmt/printf.h>
 
 #include "axis_aligned_rect.hpp"
 #include "bounding_volume_hierarchy.hpp"
@@ -53,14 +55,14 @@ void print_elapse_time(const Duration& elapsed_time)
   using namespace std::chrono;
 
   if (elapsed_time < 1s) {
-    std::cout << duration_cast<milliseconds>(elapsed_time).count() << "ms\n";
+    fmt::print("{}ms\n", duration_cast<milliseconds>(elapsed_time).count());
   }
   else if (elapsed_time < 1min) {
-    std::cout << duration_cast<seconds>(elapsed_time).count() << "s\n";
+    fmt::print("{}s\n", duration_cast<seconds>(elapsed_time).count());
   }
   else {
     auto s = duration_cast<seconds>(elapsed_time).count();
-    std::cout << s / 60 << "min " << s % 60 << "s\n";
+    fmt::print("{}min {}s\n", s / 60, s % 60);
   }
 }
 
@@ -81,29 +83,28 @@ int main() try {
   path_tracer.run(scene, camera, image, 5);
   auto end = std::chrono::system_clock::now();
 
-  std::cout << "elapsed time: ";
+  std::puts("elapsed time: ");
   print_elapse_time(end - start);
 
   std::string filename{"test.png"};
   image.saveto(filename);
-  std::cout << "Save image to " << filename << '\n';
-
+  fmt::print("Save image to {}.\n", filename);
   return 0;
 }
 catch (const Cannot_write_file& e) {
-  std::cerr << "Cannot write to file: " << e.what() << '\n';
+  fmt::print("Cannot write to file: {}\n", e.what());
   return -1;
 }
 catch (const Unsupported_image_extension& e) {
-  std::cerr << "Unsupported image extension: " << e.what() << '\n';
-  std::cerr << "Currently: only ppm output is supported\n";
+  fmt::print(stderr, "Unsupported image extension: {}\n", e.what());
+  fmt::print(stderr, "Currently: only ppm output is supported\n");
   return -2;
 }
 catch (const std::exception& e) {
-  std::cerr << "Error: " << e.what();
+  fmt::print(stderr, "Error: {}", e.what());
   throw e;
 }
 catch (...) {
-  std::cerr << "Unknown exception";
+  std::fputs("Unknown exception\n", stderr);
   return -255;
 }
