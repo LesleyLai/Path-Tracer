@@ -66,11 +66,11 @@ constexpr bool operator!=(const AABB& lhs, const AABB& rhs)
 constexpr AABB surrounding_box(const AABB box0, const AABB box1)
 {
   return AABB{{std::min(box0.min().x, box1.min().x),
-               std::min(box0.min().y, box1.min().y),
-               std::min(box0.min().z, box1.min().z)},
-              {std::max(box0.max().x, box1.max().x),
-               std::max(box0.max().y, box1.max().y),
-               std::max(box0.max().z, box1.max().z)}};
+                   std::min(box0.min().y, box1.min().y),
+                   std::min(box0.min().z, box1.min().z)},
+                {std::max(box0.max().x, box1.max().x),
+                    std::max(box0.max().y, box1.max().y),
+                    std::max(box0.max().z, box1.max().z)}};
 }
 
 #endif // AABB_HPP

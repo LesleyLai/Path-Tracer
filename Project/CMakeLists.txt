@@ -21,6 +21,7 @@ add_library(common
     src/sphere.cpp
     include/scene.hpp
     include/point.hpp
+    include/tile.hpp
     src/scene.cpp
     )
 
