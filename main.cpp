@@ -1,11 +1,11 @@
+#include <fmt/printf.h>
+
 #include <chrono>
 #include <cstdio>
 #include <memory>
 #include <random>
 #include <stdexcept>
 #include <vector>
-
-#include <fmt/printf.h>
 
 #include "axis_aligned_rect.hpp"
 #include "bounding_volume_hierarchy.hpp"
