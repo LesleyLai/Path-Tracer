@@ -40,7 +40,7 @@ script:
   - cd vcpkg
   - ./bootstrap-vcpkg.sh
   - ./vcpkg integrate install
-  - ./vcpkg install catch2
+  - ./vcpkg install catch2 fmt
   - cd ..
   - cmake .. -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
   - make

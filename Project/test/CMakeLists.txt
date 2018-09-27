@@ -11,6 +11,7 @@ add_executable ("${PROJECT_NAME}Test"
     ray_test.cpp
     sphere_test.cpp
     scene_test.cpp
+    tile_test.cpp
     main.cpp)
 
 find_package(Catch2 CONFIG REQUIRED)
