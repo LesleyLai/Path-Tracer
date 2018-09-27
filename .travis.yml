@@ -34,7 +34,7 @@ matrix:
       - export CXX=/usr/bin/clang++-6.0
 
 script:
-  - pip install conan
+  - sudo pip install conan
   - mkdir build && cd build
   - conan install ..
   - cmake ..

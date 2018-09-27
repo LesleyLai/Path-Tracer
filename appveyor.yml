@@ -20,15 +20,10 @@ platform:
 configuration:
   - Release
 
-install:
-  - cmmd: echo "Downloading conan..."
-  - cmmd: set PATH=%PATH%;%PYTHON%/Scripts/
-  - cmmd: pip.exe install conan
-  - cmmd: conan user # Create the conan data directory
-  - cmmd: conan --version
-
 #Cmake will autodetect the compiler, but we set the arch
 before_build:
+  - set PATH=%PATH%;%PYTHON%/Scripts/
+  - pip.exe install conan
   - mkdir Build
   - cd Build
   - conan install ..
