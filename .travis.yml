@@ -34,14 +34,8 @@ matrix:
       - export CXX=/usr/bin/clang++-6.0
 
 script:
-  - mkdir build
-  - cd build
-  - git clone https://github.com/Microsoft/vcpkg.git
-  - cd vcpkg
-  - ./bootstrap-vcpkg.sh
-  - ./vcpkg integrate install
-  - ./vcpkg install catch2 fmt
-  - cd ..
-  - cmake .. -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
+  - mkdir build && cd build
+  - conan install ..
+  - cmake ..
   - make
   - if [ "${BUILD_ONLY}" != "1" ]; then ctest --verbose; fi
