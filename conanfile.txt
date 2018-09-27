@@ -3,4 +3,3 @@ catch2/2.4.0@bincrafters/stable
 
 [generators]
 cmake
-
