@@ -1,6 +1,6 @@
-#include "sphere.hpp"
 #include "ray.hpp"
 #include "scene.hpp"
-#include <catch.hpp>
+#include "sphere.hpp"
+#include <catch2/catch.hpp>
 
 // TODO(lesley):

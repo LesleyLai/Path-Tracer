@@ -4,6 +4,9 @@ project(BolderRenderEngine)
 
 add_subdirectory(third-party)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 include("cmake/compiler.cmake")
 include("cmake/doxygen.cmake")
 

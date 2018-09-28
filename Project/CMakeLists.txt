@@ -30,8 +30,7 @@ target_include_directories(common
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     )
 
-find_package(fmt CONFIG REQUIRED)
-target_link_libraries(common stb fmt::fmt fmt::fmt-header-only)
+target_link_libraries(common stb  ${CONAN_LIBS})
 
 add_subdirectory(test)
 enable_testing()
