@@ -36,6 +36,6 @@ void Image::saveto(const std::string& filename) const
     buffer.push_back(green);
     buffer.push_back(blue);
   }
-  stbi_write_png(filename.c_str(), width_, height_, 3,
-                 reinterpret_cast<void*>(buffer.data()), width_ * 3);
+  stbi_write_png(filename.c_str(), int(width_), int(height_), 3,
+                 reinterpret_cast<void*>(buffer.data()), int(width_ * 3));
 }
