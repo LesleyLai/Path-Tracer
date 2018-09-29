@@ -34,6 +34,9 @@ Scene create_scene()
 
   objects.push_back(std::make_unique<Rect_XZ>(Point2f(213, 227),
                                               Point2f(343, 332), 554, light));
+  objects.push_back(
+      std::make_unique<Sphere>(Point3f(200, 100, 200), 90, white));
+
   objects.push_back(std::make_unique<Rect_XZ>(Point2f(0, 0), Point2f(555, 555),
                                               555, white,
                                               Normal_Direction::Negetive));

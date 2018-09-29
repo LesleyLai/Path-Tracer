@@ -47,13 +47,23 @@ float schlick(float cosine, float ref_idx)
 
 } // namespace
 
-std::optional<Ray> Lambertian::scatter(const Ray& /*ray_in*/,
-                                       const Hit_record& record) const
+std::optional<Scatter_result>
+Lambertian::scatter(const Ray& /*ray_in*/, const Hit_record& record) const
 {
   const auto target = record.point + record.normal + random_in_unit_sphere();
-  return Ray{record.point, target - record.point};
+  const Ray ray_out{record.point, normalize(target - record.point)};
+  const float pdf = dot(record.normal, ray_out.direction) / pi;
+  return Scatter_result{ray_out, pdf};
 }
 
+float Lambertian::scatter_pdf(const Ray& /*ray_in*/, const Ray& ray_out,
+                              const Hit_record& record) const
+{
+  const float cosine = dot(record.normal, normalize(ray_out.direction));
+  return std::max(0.f, cosine / pi);
+}
+
+/*
 std::optional<Ray> Metal::scatter(const Ray& ray_in,
                                   const Hit_record& record) const
 {
@@ -103,9 +113,16 @@ std::optional<Ray> Dielectric::scatter(const Ray& ray_in,
   }
   return Ray(record.point, *refraction);
 }
+*/
 
-std::optional<Ray> Emission::scatter(const Ray& /*ray_in*/,
-                                     const Hit_record& /*record*/) const
+std::optional<Scatter_result>
+Emission::scatter(const Ray& /*ray_in*/, const Hit_record& /*record*/) const
+{
+  return {};
+}
+
+float Emission::scatter_pdf(const Ray& /*ray_in*/, const Ray& /*ray_out*/,
+                            const Hit_record& /*record*/) const
 {
   return {};
 }

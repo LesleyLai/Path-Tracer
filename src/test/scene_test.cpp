@@ -3,4 +3,11 @@
 #include "sphere.hpp"
 #include <catch2/catch.hpp>
 
-// TODO(lesley):
+SCENARIO("Creating a Scene", "[scene]")
+{
+  GIVEN("A scene s")
+  {
+    Scene s;
+    THEN("s contains no objects") { REQUIRE(s.empty()); }
+  }
+}

@@ -15,6 +15,11 @@
 class Scene {
 public:
   /**
+   * @brief The default constructor create an empty scene
+   */
+  Scene() noexcept = default;
+
+  /**
    * @brief Constructs a Scene object
    * @param aggregate The combination of all objects in the scene
    * @param materials Ownership of all materials used for the scene
@@ -29,6 +34,11 @@ public:
    * @brief Returns the hit record at the closet hit point
    */
   Maybe_hit_t intersect_at(const Ray& r) const noexcept;
+
+  /**
+   * @brief Returns true if the scene does not contain any objects
+   */
+  bool empty() { return aggregate_ == nullptr; }
 
 private:
   std::unique_ptr<const Hitable> aggregate_ = nullptr;
