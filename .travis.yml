@@ -46,6 +46,9 @@ matrix:
       - export CXX=/usr/bin/clang++-6.0
 
 script:
-  - cmake .. -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
+  - sudo pip install conan
+  - mkdir build && cd build
+  - conan install ..
+  - cmake ..
   - make
   - if [ "${BUILD_ONLY}" != "1" ]; then ctest --verbose; fi

@@ -11,10 +11,11 @@ add_executable ("${PROJECT_NAME}Test"
     ray_test.cpp
     sphere_test.cpp
     scene_test.cpp
+    tile_test.cpp
     main.cpp)
 
 find_package(Catch2 CONFIG REQUIRED)
-target_link_libraries("${PROJECT_NAME}Test" common Catch2::Catch2)
+target_link_libraries("${PROJECT_NAME}Test" common)
 
 add_test(NAME "${PROJECT_NAME}Test" COMMAND "${PROJECT_NAME}Test")
 

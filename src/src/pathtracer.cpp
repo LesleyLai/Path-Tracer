@@ -11,8 +11,9 @@
 #include "material.hpp"
 #include "ray.hpp"
 #include "scene.hpp"
+#include "tile.hpp"
 
-Color trace(const Scene& scene, const Ray& ray, size_t depth = 0) noexcept
+Color trace(const Scene& scene, const Ray& ray_in, size_t depth = 0) noexcept
 {
   constexpr size_t max_depth = 100;
 
@@ -21,12 +22,37 @@ Color trace(const Scene& scene, const Ray& ray, size_t depth = 0) noexcept
     return Color{}; // return black
   }
 
-  if (auto hit = scene.intersect_at(ray)) {
+  if (auto hit = scene.intersect_at(ray_in)) {
     auto material = hit->material;
-    auto ref = material->scatter(ray, *hit);
+    auto scattered = material->scatter(ray_in, *hit);
     const auto emitted = material->emitted();
-    if (ref) {
-      return emitted + material->albedo() * trace(scene, *ref, depth + 1);
+    if (scattered) {
+      // Importance sampling on light
+      //      objects.push_back(std::make_unique<Rect_XZ>(Point2f(213, 227),
+      //                                                  Point2f(343, 332),
+      //                                                  554, light));
+      thread_local std::mt19937 gen = std::mt19937{std::random_device{}()};
+      std::uniform_real_distribution<float> dis(0.0, 1.0);
+      const Point3f on_light{213 + (343 - 213) * dis(gen), 554,
+                             227 + (332 - 227) * dis(gen)};
+      Vec3f to_light = on_light - hit->point;
+      const float distance_squared = to_light.length_square();
+      to_light = normalize(to_light);
+      if (dot(to_light, hit->normal) < 0) return emitted;
+      const float light_area = (343 - 213) * (332 - 227);
+      const float light_cosine = std::abs(to_light.y);
+      if (light_cosine < 0.00001f) return emitted;
+      // std::cout << light_cosine << '\n';
+      const float pdf = distance_squared / (light_cosine * light_area);
+      const Ray ray_out(hit->point, to_light);
+
+      // Random sampling
+      // const Ray ray_out = scattered->ray;
+      // const float pdf = scattered->pdf;
+      const auto s_pdf = material->scatter_pdf(ray_in, ray_out, *hit);
+
+      const auto albedo = material->albedo();
+      return emitted + albedo * s_pdf * trace(scene, ray_out, depth + 1) / pdf;
     }
     return emitted;
   }
@@ -42,46 +68,6 @@ struct PixelData {
 };
 
 constexpr size_t tile_size = 32;
-struct Tile {
-public:
-  Tile() = default;
-
-  Tile(size_t startX, size_t startY, size_t width, size_t height)
-      : startX_{startX}, startY_{startY}, width_{width}, height_{height}
-  {
-    data_.resize(width_ * height_);
-  }
-
-  Color at(size_t i, size_t j) const
-  {
-    assert(i < width_);
-    assert(j < height_);
-    return data_[j * width_ + i];
-  }
-
-  Color& at(size_t i, size_t j)
-  {
-    assert(i < width_);
-    assert(j < height_);
-    return data_[j * width_ + i];
-  }
-
-  size_t height() const { return height_; }
-
-  size_t width() const { return width_; }
-
-  size_t startX() const { return startX_; }
-
-  size_t startY() const { return startY_; }
-
-private:
-  size_t startX_ = 0;
-  size_t startY_ = 0;
-  size_t width_ = 0;
-  size_t height_ = 0;
-  std::vector<Color> data_;
-};
-
 void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
                       size_t sample_per_pixel)
 {

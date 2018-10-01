@@ -1,11 +1,10 @@
 #include <chrono>
 #include <cstdio>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <stdexcept>
 #include <vector>
-
-#include <fmt/printf.h>
 
 #include "axis_aligned_rect.hpp"
 #include "bounding_volume_hierarchy.hpp"
@@ -35,6 +34,9 @@ Scene create_scene()
 
   objects.push_back(std::make_unique<Rect_XZ>(Point2f(213, 227),
                                               Point2f(343, 332), 554, light));
+  objects.push_back(
+      std::make_unique<Sphere>(Point3f(200, 100, 200), 90, white));
+
   objects.push_back(std::make_unique<Rect_XZ>(Point2f(0, 0), Point2f(555, 555),
                                               555, white,
                                               Normal_Direction::Negetive));
@@ -55,14 +57,14 @@ void print_elapse_time(const Duration& elapsed_time)
   using namespace std::chrono;
 
   if (elapsed_time < 1s) {
-    fmt::print("{}ms\n", duration_cast<milliseconds>(elapsed_time).count());
+    std::cout << duration_cast<milliseconds>(elapsed_time).count() << "ms\n";
   }
   else if (elapsed_time < 1min) {
-    fmt::print("{}s\n", duration_cast<seconds>(elapsed_time).count());
+    std::cout << duration_cast<seconds>(elapsed_time).count() << "s\n";
   }
   else {
     auto s = duration_cast<seconds>(elapsed_time).count();
-    fmt::print("{}min {}s\n", s / 60, s % 60);
+    std::cout << (s / 60) << "min " << (s % 60) << "s\n";
   }
 }
 
@@ -80,7 +82,7 @@ int main() try {
   const auto scene = create_scene();
 
   auto start = std::chrono::system_clock::now();
-  path_tracer.run(scene, camera, image, 5);
+  path_tracer.run(scene, camera, image, 50);
   auto end = std::chrono::system_clock::now();
 
   std::puts("elapsed time: ");
@@ -88,23 +90,23 @@ int main() try {
 
   std::string filename{"test.png"};
   image.saveto(filename);
-  fmt::print("Save image to {}.\n", filename);
+  std::cout << "Save image to " << filename << ".\n";
   return 0;
 }
 catch (const Cannot_write_file& e) {
-  fmt::print("Cannot write to file: {}\n", e.what());
+  std::cerr << "Cannot write to file: " << e.what() << '\n';
   return -1;
 }
 catch (const Unsupported_image_extension& e) {
-  fmt::print(stderr, "Unsupported image extension: {}\n", e.what());
-  fmt::print(stderr, "Currently: only ppm output is supported\n");
+  std::cerr << "Unsupported image extension: " << e.what() << '\n';
+  std::fputs("Currently: only ppm output is supported", stderr);
   return -2;
 }
 catch (const std::exception& e) {
-  fmt::print(stderr, "Error: {}", e.what());
+  std::cerr << "Error: " << e.what() << '\n';
   throw e;
 }
 catch (...) {
-  std::fputs("Unknown exception\n", stderr);
+  std::fputs("Unknown exception", stderr);
   return -255;
 }

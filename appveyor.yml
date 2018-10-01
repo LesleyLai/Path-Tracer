@@ -12,27 +12,23 @@ init:
   # Set build version to git commit-hash
   - ps: Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_BRANCH) - $($env:APPVEYOR_REPO_COMMIT)"
 
-install:
-  - git submodule update --init --recursive
-  - git clone https://github.com/Microsoft/vcpkg.git
-  - cd vcpkg
-  - .\bootstrap-vcpkg.bat
-  - .\vcpkg integrate install
-  - .\vcpkg install catch2 fmt --triplet x64-windows
-  - cd ..
-
 # This allows us to pass %PLATFORM% to CMake -A.
 platform:
   - x64
 
 # build Configurations, i.e. Debug, Release, etc.
 configuration:
-  - Debug
   - Release
 
 #Cmake will autodetect the compiler, but we set the arch
 before_build:
-  - cmake -H. -BBuild -A%PLATFORM% -DCMAKE_TOOLCHAIN_FILE=vcpkg\scripts\buildsystems\vcpkg.cmake
+  - set PATH=%PATH%;%PYTHON%/Scripts/
+  - pip.exe install conan
+  - mkdir Build
+  - cd Build
+  - conan install ..
+  - cd ..
+  - cmake -H. -BBuild -A%PLATFORM%
 
 # build with MSBuild
 build:
@@ -43,3 +39,4 @@ build:
 test_script:
   - cd Build
   - ctest -V -j 2 -C %CONFIGURATION%
+

@@ -1,6 +1,6 @@
 #include "ray.hpp"
 #include "sphere.hpp"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <limits>
 
 static const Lambertian dummy_mat{Color(0.5f, 0.5f, 0.5f)};
