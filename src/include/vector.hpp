@@ -322,7 +322,8 @@ constexpr T dot(const Vector<T, size>& lhs, const Vector<T, size>& rhs) noexcept
  * @related Vector
  */
 template <typename T, size_t size>
-constexpr Vector<T, size> normalize(const Vector<T, size>& v) noexcept
+[[nodiscard]] constexpr Vector<T, size>
+normalize(const Vector<T, size>& v) noexcept
 {
   return v / v.length();
 }
