@@ -15,6 +15,7 @@ add_library(common
     src/material.cpp
     include/pathtracer.hpp
     src/pathtracer.cpp
+    include/onb.hpp
     include/vector.hpp
     include/ray.hpp
     include/sphere.hpp

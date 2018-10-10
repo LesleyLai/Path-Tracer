@@ -13,6 +13,32 @@
 #include "scene.hpp"
 #include "tile.hpp"
 
+thread_local std::mt19937 gen = std::mt19937{std::random_device{}()};
+
+struct Pdf {
+  virtual ~Pdf() = default;
+
+  Pdf(const Pdf&) = default;
+  Pdf& operator=(const Pdf&) = default;
+  Pdf(Pdf&&) = default;
+  Pdf& operator=(Pdf&&) = default;
+
+  [[nodiscard]] virtual auto value(Vec3f direction) const -> float = 0;
+  [[nodiscard]] virtual auto generate() const -> Vec3f = 0;
+};
+
+struct Cosine_pdf : Pdf {
+  float value(Vec3f direction) const override {}
+  Vec3f generate() const override {}
+};
+
+struct Hitable_pdf : Pdf {
+  Point3f o;
+  std::reference_wrapper<Hitable> hitable;
+  float value(Vec3f direction) const override {}
+  Vec3f generate() const override {}
+};
+
 Color trace(const Scene& scene, const Ray& ray_in, size_t depth = 0) noexcept
 {
   constexpr size_t max_depth = 100;
@@ -28,31 +54,35 @@ Color trace(const Scene& scene, const Ray& ray_in, size_t depth = 0) noexcept
     const auto emitted = material->emitted();
     if (scattered) {
       // Importance sampling on light
-      //      objects.push_back(std::make_unique<Rect_XZ>(Point2f(213, 227),
-      //                                                  Point2f(343, 332),
-      //                                                  554, light));
       thread_local std::mt19937 gen = std::mt19937{std::random_device{}()};
       std::uniform_real_distribution<float> dis(0.0, 1.0);
+
       const Point3f on_light{213 + (343 - 213) * dis(gen), 554,
                              227 + (332 - 227) * dis(gen)};
       Vec3f to_light = on_light - hit->point;
       const float distance_squared = to_light.length_square();
       to_light = normalize(to_light);
+
       if (dot(to_light, hit->normal) < 0) return emitted;
       const float light_area = (343 - 213) * (332 - 227);
       const float light_cosine = std::abs(to_light.y);
       if (light_cosine < 0.00001f) return emitted;
-      // std::cout << light_cosine << '\n';
-      const float pdf = distance_squared / (light_cosine * light_area);
-      const Ray ray_out(hit->point, to_light);
+      const float light_pdf = distance_squared / (light_cosine * light_area);
 
-      // Random sampling
-      // const Ray ray_out = scattered->ray;
-      // const float pdf = scattered->pdf;
-      const auto s_pdf = material->scatter_pdf(ray_in, ray_out, *hit);
+      // Reflection sampling
+      const Ray reflect_out = scattered->ray;
+      const float pdf = scattered->pdf;
+      const auto reflect_pdf = material->scatter_pdf(ray_in, reflect_out, *hit);
+
+      constexpr float light_sampling_weight = 0.5;
+      const float x = dis(gen);
+
+      const Ray ray_out = (x < light_sampling_weight)
+                              ? Ray(hit->point, to_light)
+                              : scattered->ray;
 
       const auto albedo = material->albedo();
-      return emitted + albedo * s_pdf * trace(scene, ray_out, depth + 1) / pdf;
+      return emitted + albedo * trace(scene, ray_out);
     }
     return emitted;
   }
