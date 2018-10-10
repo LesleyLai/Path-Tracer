@@ -56,9 +56,9 @@ TEST_CASE("ONB", "[math]")
 
       THEN("The components of ONB are orthogonal to each other")
       {
-        REQUIRE(dot(onb.v(), onb.w()) == 0_a.margin(1e-7));
-        REQUIRE(dot(onb.u(), onb.v()) == 0_a.margin(1e-7));
-        REQUIRE(dot(onb.u(), onb.w()) == 0_a.margin(1e-7));
+        REQUIRE(dot(onb.v(), onb.w()) == (0_a).margin(1e-7));
+        REQUIRE(dot(onb.u(), onb.v()) == (0_a).margin(1e-7));
+        REQUIRE(dot(onb.u(), onb.w()) == (0_a).margin(1e-7));
       }
     }
   }
