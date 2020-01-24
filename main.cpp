@@ -18,7 +18,9 @@ namespace {
 const Lambertian red{Color(0.65f, 0.05f, 0.05f)};
 const Lambertian white{Color(0.73f, 0.73f, 0.73f)};
 const Lambertian green{Color(0.12f, 0.45f, 0.15f)};
-const Emission light{Color(15, 15, 15)};
+const Emission light{Color(1, 1, 1)};
+const Metal metal{Color(0.73f, 0.73f, 0.73f), 0.8};
+const Dielectric glass(Color(1.f, 1.f, 1.f), 0.1, 1.655);
 } // namespace
 
 Scene create_scene()
@@ -44,6 +46,12 @@ Scene create_scene()
                                               555, white,
                                               Normal_Direction::Negetive));
 
+  objects.push_back(
+      std::make_unique<Sphere>(Point3f{200, 100, 300}, 100, metal));
+
+  objects.push_back(
+      std::make_unique<Sphere>(Point3f{300, 110, 100}, 100, glass));
+
   return Scene(std::make_unique<BVH_node>(objects.begin(), objects.end()),
                std::move(materials));
 }
@@ -65,7 +73,8 @@ void print_elapse_time(const Duration& elapsed_time)
   }
 }
 
-int main() try {
+int main()
+try {
   using namespace std::chrono;
 
   Path_tracer path_tracer;
@@ -78,9 +87,9 @@ int main() try {
       {278, 278, -800}, {278, 278, 0}, {0, 1, 0}, 40.0_deg, aspect_ratio};
   const auto scene = create_scene();
 
-  auto start = std::chrono::system_clock::now();
-  path_tracer.run(scene, camera, image, 50);
-  auto end = std::chrono::system_clock::now();
+  const auto start = std::chrono::system_clock::now();
+  path_tracer.run(scene, camera, image, 500);
+  const auto end = std::chrono::system_clock::now();
 
   std::puts("elapsed time: ");
   print_elapse_time(end - start);

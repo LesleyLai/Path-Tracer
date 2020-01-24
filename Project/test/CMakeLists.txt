@@ -1,5 +1,9 @@
 include(CTest)
 
+conan_cmake_run(REQUIRES Catch2/2.5.0@catchorg/stable
+                BASIC_SETUP CMAKE_TARGETS
+                BUILD missing)
+
 add_executable ("${PROJECT_NAME}Test"
     aabb_test.cpp
     angle_test.cpp
@@ -14,8 +18,7 @@ add_executable ("${PROJECT_NAME}Test"
     tile_test.cpp
     main.cpp)
 
-find_package(Catch2 CONFIG REQUIRED)
-target_link_libraries("${PROJECT_NAME}Test" common)
+target_link_libraries("${PROJECT_NAME}Test" common CONAN_PKG::Catch2)
 
 add_test(NAME "${PROJECT_NAME}Test" COMMAND "${PROJECT_NAME}Test")
 
