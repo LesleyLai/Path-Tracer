@@ -1,5 +1,8 @@
 [requires]
-catch2/2.4.0@bincrafters/stable
+nlohmann_json/3.7.3@_/_
+
+[build_requires]
+Catch2/2.11.1@catchorg/stable
 
 [generators]
 cmake
