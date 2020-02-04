@@ -43,6 +43,18 @@ struct PixelData {
 };
 
 constexpr size_t tile_size = 32;
+Path_tracer::Path_tracer()
+{
+  progress_bar_.set_bar_width(50);
+  progress_bar_.start_bar_with("[");
+  progress_bar_.fill_bar_progress_with("=");
+  progress_bar_.lead_bar_progress_with(">");
+  progress_bar_.fill_bar_remainder_with(" ");
+  progress_bar_.end_bar_with("]");
+  progress_bar_.set_postfix_text("Rendering");
+  progress_bar_.set_foreground_color(indicators::Color::GREEN);
+}
+
 void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
                       size_t sample_per_pixel)
 {
@@ -50,10 +62,14 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
 
   std::vector<std::future<Tile>> results;
 
+  std::atomic<std::size_t> progress_tick = 0;
+  const std::size_t tile_count = height * width / tile_size / tile_size + 1;
+
   for (size_t y = 0; y < height; y += tile_size) {
     for (size_t x = 0; x < width; x += tile_size) {
       results.push_back(
-          std::async(std::launch::async, [x, y, sample_per_pixel, width, height,
+          std::async(std::launch::async, [this, &progress_tick, tile_count, x,
+                                          y, sample_per_pixel, width, height,
                                           &scene, &camera] {
             const size_t end_x = std::min(x + tile_size, width);
             const size_t end_y = std::min(y + tile_size, height);
@@ -78,6 +94,10 @@ void Path_tracer::run(const Scene& scene, const Camera& camera, Image& image,
                 tile.at(i, j) = c;
               }
             }
+
+            ++progress_tick;
+            progress_bar_.set_progress(
+                static_cast<float>(progress_tick.load()) / tile_count * 100.);
 
             return tile;
           }));

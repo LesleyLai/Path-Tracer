@@ -30,7 +30,7 @@ target_include_directories(common
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     )
 
-target_link_libraries(common stb  ${CONAN_LIBS})
+target_link_libraries(common stb indica::indica)
 
 add_subdirectory(test)
 enable_testing()
