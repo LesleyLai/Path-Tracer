@@ -1,4 +1,6 @@
-# Bolder Render Engine
+# Path Tracer
+This project is considered done. Go to [lesty](https://github.com/LesleyLai/lesty) if you are interested in the offline renderer I am doing now.
+
 ## Build Status
 Master Status:
 Travis: [![Travis Build Status](https://travis-ci.org/LesleyLai/Bolder-Render-Engine.svg?branch=master)](https://travis-ci.org/LesleyLai/Bolder-Render-Engine)
@@ -30,3 +32,6 @@ $ make
 ## Demo scenes
 ### Bubbles
 ![bubbles.png](images/bubbles.png)
+
+### Cornell Box
+![cornell.png](images/cornell.png)
